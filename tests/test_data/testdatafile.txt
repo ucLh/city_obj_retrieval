@@ -1,0 +1,1 @@
+{"name":"/this/is/test/path/testimg.jpg","embedding":[-0.12846693396568299]}

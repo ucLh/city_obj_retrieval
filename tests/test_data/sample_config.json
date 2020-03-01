@@ -1,0 +1,1 @@
+{  "input_size": [    256,    256  ],  "datafile_path": "this/is/test/path/testdatafile.txt",  "imgs_path" : "this/is/test/path/test_img_path/",  "pb_path" : "this/is/test/path/testpb.pb",   "input_node" : "test_input_node:0", "output_node" :  "test_output_node:0"}

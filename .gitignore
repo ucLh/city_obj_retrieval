@@ -1,0 +1,8 @@
+.idea
+.vscode
+build
+build_DCKR
+cmake-build-debug
+tests/test_data/*.pb
+img
+data.txt
