@@ -58,44 +58,45 @@ public:
   std::string config_path = "config.json";
 
   // TODO MOVE IT OUT
-  bool load_database();
-  bool load_config();
-  bool add_json_entry(data_vec_entry new_data);
+  bool load_database() override;
+  bool load_config() override;
+  bool add_json_entry(data_vec_entry new_data) override;
 
   bool add_error_entry(const std::string &act_class_in,
                        const std::string &act_path_in,
-                       const std::string &expected_class_in);
+                       const std::string &expected_class_in) override;
 
   /// In case you want specific config to be used
   /// \param path to config
   /// \return if custom config is used
   bool set_config_path(std::string path) override;
 
-  cv::Size get_config_input_size();
+  cv::Size get_config_input_size() override;
 
-  std::string get_config_input_node();
+  std::string get_config_input_node() override;
 
-  std::string get_config_output_node();
+  std::string get_config_output_node() override;
 
-  std::string get_config_pb_path();
+  std::string get_config_pb_path() override;
 
-  std::string get_config_imgs_path();
+  std::string get_config_imgs_path() override;
 
-  int get_config_top_n();
+  int get_config_top_n() override ;
 
-  bool set_data_vec_base(const std::vector<data_vec_entry> &base);
+  bool set_data_vec_base(const std::vector<data_vec_entry> &base) override;
 
-  bool set_config_input_size(const cv::Size &size);
+  bool set_config_input_size(const cv::Size &size) override;
 
-  bool set_config_input_node(const std::string &input_node);
+  bool set_config_input_node(const std::string &input_node) override;
 
-  bool set_config_output_node(const std::string &output_node);
+  bool set_config_output_node(const std::string &output_node) override;
 
-  bool set_config_pb_path(const std::string &pb_path);
+  bool set_config_pb_path(const std::string &pb_path) override;
 
-  std::vector<DataHandling::data_vec_entry> get_data_vec_base();
+  std::vector<DataHandling::data_vec_entry> get_data_vec_base() override;
 
-  void add_element_to_data_vec_base(DataHandling::data_vec_entry &entry);
+  void
+  add_element_to_data_vec_base(DataHandling::data_vec_entry &entry) override;
 
 protected:
   std::fstream imgs_datafile;
