@@ -10,7 +10,7 @@ find_package(TensorFlow CONFIG REQUIRED)
 
 # Configuring test data
 
-file(COPY test_data/optimized_val_84.pb DESTINATION ${CMAKE_BINARY_DIR}/test_data/)
+file(COPY test_data/val80_optimized.pb DESTINATION ${CMAKE_BINARY_DIR}/test_data/)
 file(GLOB_RECURSE TEST_DATA ${CMAKE_CURRENT_LIST_DIR}/test_data/series/*.jpg)
 
 #message(STATUS ${TEST_DATA})
