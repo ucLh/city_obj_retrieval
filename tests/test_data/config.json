@@ -1,1 +1,11 @@
-{  "input_size": [    256,    256  ],  "datafile_path": "data_metrics.txt",  "imgs_path" : "series/",  "pb_path" : "../../test_data/val80_optimized.pb",   "input_node" : "image_batch_p:0", "output_node" :  "embeddings:0"}
+{
+  "input_size": [
+    256,
+    256
+  ],
+  "datafile_path": "data_metrics.txt",
+  "imgs_path": "series/",
+  "pb_path": "../../test_data/val80_optimized.pb",
+  "input_node": "image_batch_p:0",
+  "output_node": "embeddings:0"
+}
