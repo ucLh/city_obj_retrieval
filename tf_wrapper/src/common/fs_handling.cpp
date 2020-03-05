@@ -1,5 +1,6 @@
 #include "tf_wrapper/common/fs_handling.h"
 #include "tf_wrapper/tensorflow_auxiliary.h"
+#include <sstream>
 #include <utility>
 
 std::vector<cv::Mat> read_batch(const std::string &imgs_path, int batch_size) {
@@ -51,12 +52,16 @@ bool DataHandling::load_config() {
   using namespace rapidjson;
   Document doc;
   std::string line;
+  std::stringstream json_doc_buffer;
 
   open_config();
 
   if (config_datafile.is_open()) {
-    std::getline(config_datafile, line);
-    doc.Parse(line.c_str());
+    while (std::getline(config_datafile, line)) {
+      json_doc_buffer << line << "\n";
+    }
+
+    doc.Parse(json_doc_buffer.str().c_str());
     if (doc.IsObject()) {
       rapidjson::Value &input_size = doc["input_size"];
       rapidjson::Value &datafile_path = doc["datafile_path"];
