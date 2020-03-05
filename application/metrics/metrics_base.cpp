@@ -37,8 +37,9 @@ float MetricsBase::getMetrics(std::string &testimg_path, int top_N_classes) {
   for (auto it = testimg_vector.begin(); it != testimg_vector.end(); ++it) {
     test_distance = inference_and_matching(it->img_path);
     auto proposed_classes = choose_classes(test_distance, it, top_N_classes);
-    if (!it->is_correct)
+    if (!it->is_correct) {
       db_handler->add_error_entry(it->img_class, it->img_path, test_class);
+    }
 
     // it->is_correct = test_class == it->img_class; //So much simplified so
     // wow.
@@ -73,8 +74,9 @@ std::vector<std::string> MetricsBase::choose_classes(
     test_class = common_ops::extract_class(res_it.path);
     top_classes_set.insert(test_class);
 
-    if (top_classes_set.size() >= top_N_classes)
+    if (top_classes_set.size() >= top_N_classes) {
       break;
+    }
   }
 
   it->is_correct = top_classes_set.count(it->img_class) != 0;

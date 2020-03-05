@@ -24,8 +24,9 @@ bool path_is_img(std::string &path) {
 std::vector<std::string> fs_img::list_imgs(const std::string &dir_path) {
   std::vector<std::string> vector_of_data;
   for (const auto &entry : fs::recursive_directory_iterator(dir_path)) {
-    if (fs::is_regular_file(entry) && path_is_img((std::string &)entry.path()))
+    if (fs::is_regular_file(entry) && path_is_img((std::string &)entry.path())) {
       vector_of_data.emplace_back(entry.path());
+    }
   }
   return vector_of_data;
 }
@@ -94,8 +95,9 @@ bool DataHandling::load_database() {
   std::string line;
   Document doc;
 
-  if (!data_vec_base.empty())
+  if (!data_vec_base.empty()) {
     data_vec_base.clear();
+  }
 
   if (imgs_datafile.is_open()) {
     while (std::getline(imgs_datafile, line)) {
