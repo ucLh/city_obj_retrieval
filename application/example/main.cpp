@@ -1,37 +1,13 @@
+#include "command_line_utils.h"
 #include "tf_wrapper/wrapper_base.h"
 #include <iostream>
 
-#include <algorithm>
 #include <string>
 #include <vector>
 
-char *getCmdOption(char **begin, char **end, const std::string &option) {
-  char **itr = std::find(begin, end, option);
-  if (itr != end && ++itr != end) {
-    return *itr;
-  }
-  return nullptr;
-}
-
-bool cmdOptionExists(char **begin, char **end, const std::string &option) {
-  return std::find(begin, end, option) != end;
-}
-
-std::string parseCommandLine(int argc, char *argv[], const std::string &c) {
-  std::string ret;
-  if (cmdOptionExists(argv, argv + argc, c)) {
-    char *filename = getCmdOption(argv, argv + argc, c);
-    ret = std::string(filename);
-  } else {
-    std::cout << "Use -img $image$" << std::endl;
-    std::exit(EXIT_FAILURE);
-  }
-  return ret;
-}
-
 int main(int argc, char *argv[]) {
   std::string const inFileName =
-      parseCommandLine(argc, argv, std::string("-img"));
+      cmd_utils::parse_command_line(argc, argv, std::string("-img"));
 
   WrapperBase tf_wrapper;
   if (!tf_wrapper.prepare_for_inference()) {
