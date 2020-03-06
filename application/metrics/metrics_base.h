@@ -17,7 +17,7 @@ public:
   /// using accuracy as metrics
   /// \param testimg_path path to test image
   /// \return value of accuracy
-  float getMetrics(std::string &testimg_path, int top_N_classes = 4);
+  float get_metrics(std::string &testimg_path, int top_N_classes = 4);
 
   std::vector<WrapperBase::distance>
   inference_and_matching(std::string img_path) override;

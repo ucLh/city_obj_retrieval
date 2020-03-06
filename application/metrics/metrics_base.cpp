@@ -8,9 +8,9 @@ MetricsBase::inference_and_matching(std::string img_path) {
   return WrapperBase::inference_and_matching(img_path);
 }
 
-bool IsCorrect(MetricsBase::testimg_entry &entry) { return entry.is_correct; }
+bool is_correct(MetricsBase::testimg_entry &entry) { return entry.is_correct; }
 
-float MetricsBase::getMetrics(std::string &testimg_path, int top_N_classes) {
+float MetricsBase::get_metrics(std::string &testimg_path, int top_N_classes) {
   std::vector<std::string> test_imgs_paths = fs_img::list_imgs(testimg_path);
   testimg_entry test_img;
   std::vector<WrapperBase::distance> test_distance;
@@ -47,7 +47,7 @@ float MetricsBase::getMetrics(std::string &testimg_path, int top_N_classes) {
   }
 
   float val_correct =
-      std::count_if(testimg_vector.begin(), testimg_vector.end(), IsCorrect);
+      std::count_if(testimg_vector.begin(), testimg_vector.end(), is_correct);
 
   float metrics = val_correct / testimg_vector.size() * 100.f;
   std::cout << "Accuracy is : " << metrics << "%" << std::endl;

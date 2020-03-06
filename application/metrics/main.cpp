@@ -3,13 +3,13 @@
 #include <iostream>
 
 int main(int argc, char *argv[]) {
-  std::string const inPath =
+  std::string const in_path =
       cmd_utils::parse_command_line(argc, argv, std::string("--test_path"));
-  std::string const topNClassesString =
-      cmd_utils::parse_command_line(argc, argv, std::string("--topN"));
-  int topNClasses = std::stoi(topNClassesString);
+  std::string const top_n_classesString =
+      cmd_utils::parse_command_line(argc, argv, std::string("--top_n_classes"));
+  int top_n_classes = std::stoi(top_n_classesString);
   std::cout << "Start initalizing tf_wrapper" << std::endl;
   MetricsBase tf_wrapper;
   std::cout << "Wrapper was initialized" << std::endl;
-  tf_wrapper.getMetrics((std::string &)inPath, topNClasses);
+  tf_wrapper.get_metrics((std::string &)in_path, top_n_classes);
 }

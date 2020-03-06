@@ -6,7 +6,7 @@
 #include <vector>
 
 int main(int argc, char *argv[]) {
-  std::string const inFileName =
+  std::string const in_file_name =
       cmd_utils::parse_command_line(argc, argv, std::string("-img"));
 
   WrapperBase tf_wrapper;
@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
   //    tf_wrapper->topN = 10;
 
   std::vector<WrapperBase::distance> results =
-      tf_wrapper.inference_and_matching(inFileName);
+      tf_wrapper.inference_and_matching(in_file_name);
   //    common_ops::delete_safe(tf_wrapper);
 
   for (const auto &result : results)
