@@ -25,8 +25,9 @@ bool WrapperBase::prepare_for_inference() {
   list_of_imgs =
       fs_img::list_imgs(db_handler->get_config_imgs_path()); // TODO rewrite it
   _check_for_updates();
-  if (!list_of_imgs.empty())
+  if (!list_of_imgs.empty()) {
     _add_updates();
+  }
   else
     std::cout << "No new images found" << std::endl;
 
@@ -40,8 +41,9 @@ WrapperBase::inference_and_matching(std::string img_path) {
   topN = db_handler->get_config_top_n();
   cv::Mat img = fs_img::read_img(img_path, db_handler->get_config_input_size());
 
-  if (!inference_handler->is_loaded())
+  if (!inference_handler->is_loaded()) {
     inference_handler->load(db_handler->get_config_pb_path(), _input_nodes[0]);
+  }
 
   inference_handler->set_input_output(_input_nodes, _output_nodes);
   inference_handler->inference({img});
@@ -57,9 +59,10 @@ WrapperBase::inference_and_matching(std::string img_path) {
 bool WrapperBase::_add_updates() {
   std::cout << "Adding updates to database..." << std::endl;
   cv::Mat img; // TODO rethink this logic..
-  if (!inference_handler->is_loaded())
+  if (!inference_handler->is_loaded()) {
     inference_handler->load(db_handler->get_config_pb_path(),
                             db_handler->get_config_input_node());
+  }
   inference_handler->set_input_output(_input_nodes, _output_nodes);
   std::vector<float> out_embedding; // TODO remember about batch
   DataHandling::data_vec_entry new_data;
@@ -106,8 +109,9 @@ bool WrapperBase::_matching(
   distances.clear();
   WrapperBase::distance distance;
 
-  if (base.empty() or target.empty())
+  if (base.empty() or target.empty()) {
     return false;
+  }
 
   for (auto &it : base) {
     distance.dist =
@@ -116,8 +120,9 @@ bool WrapperBase::_matching(
     distances.push_back(distance);
   }
   std::sort(distances.begin(), distances.end(), sort_by_dist);
-  if (topN > distances.size())
+  if (topN > distances.size()) {
     topN = distances.size();
+  }
   distances.erase(distances.begin() + topN, distances.end());
 
   return true;

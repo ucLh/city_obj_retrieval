@@ -73,11 +73,12 @@ void TensorflowWrapperCore::configure_graph() {
   if (_cpu_only && _agres_optim_cpu_enabled)
     graph::SetDefaultDevice("/job:localhost/replica:0/task:0/device:XLA_CPU:0",
                             &_graph_def);
-  if (!_cpu_only && _gpu_number >= 0)
+  if (!_cpu_only && _gpu_number >= 0) {
     //        graph::SetDefaultDevice("/job:localhost/replica:0/task:0/device:GPU:"
     //        + std::to_string(_gpu_number), &_graph_def);
     graph::SetDefaultDevice("/device:GPU:" + std::to_string(_gpu_number),
                             &_graph_def);
+  }
 }
 
 bool TensorflowWrapperCore::load(const std::string &filename,
@@ -229,10 +230,12 @@ double TensorflowWrapperCore::get_gpu_memory_fraction() const {
 
 void TensorflowWrapperCore::set_gpu_memory_fraction(
     double gpu_memory_fraction) {
-  if (gpu_memory_fraction > 1.0)
+  if (gpu_memory_fraction > 1.0) {
     gpu_memory_fraction = 1.0;
-  if (gpu_memory_fraction < 0.0)
+  }
+  if (gpu_memory_fraction < 0.0) {
     gpu_memory_fraction = 0.1;
+  }
 
   _gpu_memory_fraction = gpu_memory_fraction;
 }

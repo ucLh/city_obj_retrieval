@@ -1,1 +1,12 @@
-{  "input_size": [    256,    256  ],  "datafile_path": "/home/luch/Programming/C++/city_obj_recognition/data.txt",  "imgs_path" : "/home/luch/Programming/Python/facenet/datasets/series",  "pb_path" : "/home/luch/Programming/Python/facenet/models/test_pb/val80_optimized.pb",   "input_node" : "image_batch_p:0", "output_node" :  "embeddings:0", "top_n":50}
+{
+  "input_size": [
+    256,
+    256
+  ],
+  "datafile_path": "/this/is/where/we/store/processed/images/embeddings/data.txt",
+  "imgs_path": "/path/to/database/of/images/",
+  "pb_path": "/path/to/checkpoint/model.pb",
+  "input_node": "image_batch_p:0",
+  "output_node": "embeddings:0",
+  "top_n": 50
+}

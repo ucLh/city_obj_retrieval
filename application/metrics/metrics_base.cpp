@@ -8,11 +8,9 @@ MetricsBase::inference_and_matching(std::string img_path) {
   return WrapperBase::inference_and_matching(img_path);
 }
 
-bool IsCorrect(MetricsBase::testimg_entry &entry) { return entry.is_correct; }
+bool is_correct(MetricsBase::testimg_entry &entry) { return entry.is_correct; }
 
-float MetricsBase::getMetrics(std::string &testimg_path, int top_N_classes) {
-
-  float metrics;
+float MetricsBase::get_metrics(std::string &testimg_path, int top_N_classes) {
   std::vector<std::string> test_imgs_paths = fs_img::list_imgs(testimg_path);
   testimg_entry test_img;
   std::vector<WrapperBase::distance> test_distance;
@@ -23,7 +21,6 @@ float MetricsBase::getMetrics(std::string &testimg_path, int top_N_classes) {
   std::cout << "Preparaing for inference was finished" << std::endl;
   std::cout << "Finding TOP " << top_N_classes << " among "
             << this->db_handler->get_config_top_n() << std::endl;
-  float val_correct;
 
   for (const auto &test_img_path : test_imgs_paths) {
     test_img.img_path = test_img_path;
@@ -37,8 +34,9 @@ float MetricsBase::getMetrics(std::string &testimg_path, int top_N_classes) {
   for (auto it = testimg_vector.begin(); it != testimg_vector.end(); ++it) {
     test_distance = inference_and_matching(it->img_path);
     auto proposed_classes = choose_classes(test_distance, it, top_N_classes);
-    if (!it->is_correct)
+    if (!it->is_correct) {
       db_handler->add_error_entry(it->img_class, it->img_path, test_class);
+    }
 
     // it->is_correct = test_class == it->img_class; //So much simplified so
     // wow.
@@ -48,10 +46,10 @@ float MetricsBase::getMetrics(std::string &testimg_path, int top_N_classes) {
               << testimg_vector.size() << "\r" << std::flush;
   }
 
-  val_correct =
-      std::count_if(testimg_vector.begin(), testimg_vector.end(), IsCorrect);
+  float val_correct =
+      std::count_if(testimg_vector.begin(), testimg_vector.end(), is_correct);
 
-  metrics = val_correct / testimg_vector.size() * 100.f;
+  float metrics = val_correct / testimg_vector.size() * 100.f;
   std::cout << "Accuracy is : " << metrics << "%" << std::endl;
   std::cout << "Got " << val_correct << " out of " << testimg_vector.size()
             << " right" << std::endl;
@@ -73,14 +71,13 @@ std::vector<std::string> MetricsBase::choose_classes(
     test_class = common_ops::extract_class(res_it.path);
     top_classes_set.insert(test_class);
 
-    if (top_classes_set.size() >= top_N_classes)
+    if (top_classes_set.size() >= top_N_classes) {
       break;
+    }
   }
 
   it->is_correct = top_classes_set.count(it->img_class) != 0;
 
-  std::vector<std::string> top_classes_vec(top_classes_set.begin(),
-                                           top_classes_set.end());
-
-  return top_classes_vec;
+  return std::vector<std::string>(top_classes_set.begin(),
+                                  top_classes_set.end());
 }

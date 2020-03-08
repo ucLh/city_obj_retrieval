@@ -1,5 +1,6 @@
 #include "tf_wrapper/common/fs_handling.h"
 #include "tf_wrapper/tensorflow_auxiliary.h"
+#include <sstream>
 #include <utility>
 
 std::vector<cv::Mat> read_batch(const std::string &imgs_path, int batch_size) {
@@ -24,8 +25,9 @@ bool path_is_img(std::string &path) {
 std::vector<std::string> fs_img::list_imgs(const std::string &dir_path) {
   std::vector<std::string> vector_of_data;
   for (const auto &entry : fs::recursive_directory_iterator(dir_path)) {
-    if (fs::is_regular_file(entry) && path_is_img((std::string &)entry.path()))
+    if (fs::is_regular_file(entry) && path_is_img((std::string &)entry.path())) {
       vector_of_data.emplace_back(entry.path());
+    }
   }
   return vector_of_data;
 }
@@ -50,12 +52,16 @@ bool DataHandling::load_config() {
   using namespace rapidjson;
   Document doc;
   std::string line;
+  std::stringstream json_doc_buffer;
 
   open_config();
 
   if (config_datafile.is_open()) {
-    std::getline(config_datafile, line);
-    doc.Parse(line.c_str());
+    while (std::getline(config_datafile, line)) {
+      json_doc_buffer << line << "\n";
+    }
+
+    doc.Parse(json_doc_buffer.str().c_str());
     if (doc.IsObject()) {
       rapidjson::Value &input_size = doc["input_size"];
       rapidjson::Value &datafile_path = doc["datafile_path"];
@@ -94,8 +100,9 @@ bool DataHandling::load_database() {
   std::string line;
   Document doc;
 
-  if (!data_vec_base.empty())
+  if (!data_vec_base.empty()) {
     data_vec_base.clear();
+  }
 
   if (imgs_datafile.is_open()) {
     while (std::getline(imgs_datafile, line)) {
