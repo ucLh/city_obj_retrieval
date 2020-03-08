@@ -55,7 +55,7 @@ In order to interact with a library you should connect it via Cmake and include 
 2. Call a `prepare_for_inference()` method.
 3. Call a `inference_and_matching(img_path)` method with the argument that is the path to a query image. This method
 
-_Method `inference_and_matching`_ will return `std::vector<WrapperBase::distance>` - a vector with `"top_n"` image
+Method _`inference_and_matching`_ will return `std::vector<WrapperBase::distance>` - a vector with `"top_n"` image
  paths representing images closest to a query image. 
 
 #### Example
@@ -64,13 +64,13 @@ The `TF_WRAPPER_EXAMPLE` file is an example of library usage. To run it you shou
 * `-img` - path to a query image
 
 #### Metrics
-The `` is a simple console application to calculate accuracy of matching. To run it you should pass two arguments:
+The `TF_WRAPPER_METRICS` is a simple console application to calculate accuracy of matching. To run it you should pass two arguments:
 
 * `--test_path` - path to a directory with query images that you'd like to match with the images in `"images_path"` directory
 * `--top_n_classes` - number of plausible classes for a query. If the query image is among `-top_n_classes` unique classes
 the match will be considered correct in metrics calculation.
 
-###Dataset structure
+### Dataset structure
 The paths that you pass through `--test_path` or `"images_path"` should point to directories of the following structure:
 
 ```
