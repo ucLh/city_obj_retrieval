@@ -44,7 +44,7 @@ public:
 
 protected:
   std::unique_ptr<DBInterface> db_handler;
-  std::unique_ptr<EmbeddingsInterface> inference_handler;
+  std::unique_ptr<IEmbeddingsInferenceHandler> inference_handler;
   std::vector<std::string> list_of_imgs;
   std::vector<WrapperBase::distance> distances;
 

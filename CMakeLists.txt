@@ -8,6 +8,7 @@ set(PROJECT_NAME TF_WRAPPER)
 add_subdirectory(tf_wrapper)
 add_subdirectory(application/example)
 add_subdirectory(application/metrics)
+add_subdirectory(application/segmentation)
 
 include(cmake/googletest.cmake)
 fetch_googletest(

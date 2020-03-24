@@ -16,7 +16,7 @@ TEST(load_config, load_config_load_Test) {
   ASSERT_EQ(config.input_size, cv::Size(256, 256));
   ASSERT_EQ(config.datafile_path, "this/is/test/path/testdatafile.txt");
   ASSERT_EQ(config.imgs_path, "this/is/test/path/test_img_path/");
-  ASSERT_EQ(config.pb_path, "this/is/test/path/testpb.pb");
+  ASSERT_EQ(config.embed_pb_path, "this/is/test/path/testpb.pb");
   ASSERT_EQ(config.input_node, "test_input_node:0");
   ASSERT_EQ(config.output_node, "test_output_node:0");
 }
@@ -53,7 +53,7 @@ TEST(add_json_entry, add_json_entry_add_Test) {
 
 TEST(read_img, read_img_read_Test) {
   auto size = cv::Size_<int>(256, 256);
-  cv::Mat test_img = fs_img::read_img("Lenna.jpg", size);
+  cv::Mat test_img = fs_img::read_img("Lenna.jpg");
 
   ASSERT_FALSE(test_img.empty());
   //    Comment these lines out for now. New checkpoints have resize op inside

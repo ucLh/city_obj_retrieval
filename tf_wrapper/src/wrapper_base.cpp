@@ -5,7 +5,7 @@
 
 WrapperBase::WrapperBase() {
   db_handler = std::make_unique<DataHandling>();
-  inference_handler = std::make_unique<TensorFlowEmbeddingsInterface>();
+  inference_handler = std::make_unique<EmbeddingsInferenceHandler>();
 
   topN = 1;
 }
@@ -27,8 +27,7 @@ bool WrapperBase::prepare_for_inference() {
   _check_for_updates();
   if (!list_of_imgs.empty()) {
     _add_updates();
-  }
-  else
+  } else
     std::cout << "No new images found" << std::endl;
 
   return true;
@@ -39,10 +38,11 @@ WrapperBase::inference_and_matching(std::string img_path) {
   std::vector<float> embedding;
 
   topN = db_handler->get_config_top_n();
-  cv::Mat img = fs_img::read_img(img_path, db_handler->get_config_input_size());
+  cv::Mat img = fs_img::read_img(img_path);
 
   if (!inference_handler->is_loaded()) {
-    inference_handler->load(db_handler->get_config_pb_path(), _input_nodes[0]);
+    inference_handler->load(db_handler->get_config_embed_pb_path(),
+                            _input_nodes[0]);
   }
 
   inference_handler->set_input_output(_input_nodes, _output_nodes);
@@ -51,7 +51,7 @@ WrapperBase::inference_and_matching(std::string img_path) {
   embedding = inference_handler->get_output_embeddings()[0];
 
   _matching(db_handler->get_data_vec_base(), embedding);
-  inference_handler->clear_session();
+  inference_handler->clear_data();
 
   return distances;
 }
@@ -60,18 +60,18 @@ bool WrapperBase::_add_updates() {
   std::cout << "Adding updates to database..." << std::endl;
   cv::Mat img; // TODO rethink this logic..
   if (!inference_handler->is_loaded()) {
-    inference_handler->load(db_handler->get_config_pb_path(),
+    inference_handler->load(db_handler->get_config_embed_pb_path(),
                             db_handler->get_config_input_node());
   }
   inference_handler->set_input_output(_input_nodes, _output_nodes);
   std::vector<float> out_embedding; // TODO remember about batch
   DataHandling::data_vec_entry new_data;
   for (const auto &img_path : list_of_imgs) {
-    img = fs_img::read_img(img_path, db_handler->get_config_input_size());
+    img = fs_img::read_img(img_path);
     inference_handler->inference({img}); // TODO remember about batch
     new_data.embedding =
         inference_handler->get_output_embeddings()[0]; // TODO BATCH
-    inference_handler->clear_session();
+    inference_handler->clear_data();
     new_data.filepath = img_path;
     db_handler->add_element_to_data_vec_base(new_data);
     db_handler->add_json_entry(new_data);

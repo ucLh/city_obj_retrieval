@@ -65,7 +65,7 @@ public:
 
 protected:
   //    virtual void clear_model() = 0;
-  //    virtual void clear_session() = 0;
+  //    virtual void clear_data() = 0;
 
   void get_input_node_name_from_graph_if_possible(
       const std::string &input_node_name);

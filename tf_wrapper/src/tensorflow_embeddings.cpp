@@ -29,7 +29,8 @@ std::string TensorFlowEmbeddings::inference(const std::vector<cv::Mat> &imgs) {
     }
   }
 
-  if (!tf_aux::convert_mat_to_tensor_v2(imgs, _input_tensor)) {
+  if (!tf_aux::convert_mat_to_tensor_v2<float>(imgs, _input_tensor,
+                                               tensorflow::DT_FLOAT)) {
     return "Fail to convert Mat to Tensor";
   }
 

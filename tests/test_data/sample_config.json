@@ -5,7 +5,9 @@
   ],
   "datafile_path": "this/is/test/path/testdatafile.txt",
   "imgs_path": "this/is/test/path/test_img_path/",
-  "pb_path": "this/is/test/path/testpb.pb",
+  "embed_pb_path": "this/is/test/path/testpb.pb",
+  "segm_pb_path": "/home/luch/Programming/C++/city_obj_retrieval/Xception-Deeplab.pb",
+  "colors_path": "/home/luch/Programming/C++/city_obj_retrieval/classes.csv",
   "input_node": "test_input_node:0",
   "output_node": "test_output_node:0"
 }

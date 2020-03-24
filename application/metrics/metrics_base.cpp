@@ -26,7 +26,7 @@ float MetricsBase::get_metrics(std::string &testimg_path, int top_N_classes) {
     test_img.img_path = test_img_path;
     test_img.img_class = common_ops::extract_class(test_img_path);
     test_img.img =
-        fs_img::read_img(test_img_path, db_handler->get_config_input_size());
+        fs_img::read_img(test_img_path);
 
     testimg_vector.emplace_back(test_img);
   }
