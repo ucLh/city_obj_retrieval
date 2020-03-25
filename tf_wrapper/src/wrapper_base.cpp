@@ -1,12 +1,10 @@
 #include "tf_wrapper/wrapper_base.h"
 #include "tf_wrapper/tensorflow_embeddings.h"
 #include "tf_wrapper/wrapper_interfaces.h"
-#include <utility>
 
 WrapperBase::WrapperBase() {
   db_handler = std::make_unique<DataHandling>();
   inference_handler = std::make_unique<EmbeddingsInferenceHandler>();
-
   topN = 1;
 }
 
@@ -41,8 +39,7 @@ WrapperBase::inference_and_matching(std::string img_path) {
   cv::Mat img = fs_img::read_img(img_path);
 
   if (!inference_handler->is_loaded()) {
-    inference_handler->load(db_handler->get_config_embed_pb_path(),
-                            _input_nodes[0]);
+    inference_handler->load(db_handler->get_config_pb_path(), _input_nodes[0]);
   }
 
   inference_handler->set_input_output(_input_nodes, _output_nodes);
@@ -60,7 +57,7 @@ bool WrapperBase::_add_updates() {
   std::cout << "Adding updates to database..." << std::endl;
   cv::Mat img; // TODO rethink this logic..
   if (!inference_handler->is_loaded()) {
-    inference_handler->load(db_handler->get_config_embed_pb_path(),
+    inference_handler->load(db_handler->get_config_pb_path(),
                             db_handler->get_config_input_node());
   }
   inference_handler->set_input_output(_input_nodes, _output_nodes);

@@ -52,9 +52,8 @@ public:
     std::string datafile_path;
     std::string imgs_path;
     std::string input_node;
-    std::string embed_pb_path;
+    std::string pb_path;
     std::string output_node;
-    std::string segm_pb_path;
     std::string colors_path;
   };
 
@@ -92,9 +91,7 @@ public:
 
   std::string get_config_output_node() override;
 
-  std::string get_config_embed_pb_path() override;
-
-  std::string get_config_segm_pb_path() override;
+  std::string get_config_pb_path() override;
 
   std::string get_config_imgs_path() override;
 
@@ -110,9 +107,7 @@ public:
 
   bool set_config_output_node(const std::string &output_node) override;
 
-  bool set_config_embed_pb_path(const std::string &embed_pb_path) override;
-
-  bool set_config_segm_pb_path(const std::string &segm_pb_path) override;
+  bool set_config_pb_path(const std::string &embed_pb_path) override;
 
   bool set_config_colors_path(const std::string &colors_path) override;
 
@@ -129,6 +124,9 @@ protected:
   bool open_datafile();
   bool open_config();
   bool open_error_datafile();
+  static std::string try_parse_json_member(rapidjson::Document &doc,
+                                           const std::string &name,
+                                           const std::string &default_val = "");
 };
 
 #endif // TF_WRAPPER_EMBEDDING_FS_HANDLING_H

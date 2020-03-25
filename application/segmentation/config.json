@@ -3,12 +3,9 @@
     1024,
     1024
   ],
-  "datafile_path": "/home/luch/Programming/C++/city_obj_retrieval/data.txt",
   "imgs_path": "/home/luch/Programming/C++/city_obj_retrieval/tests/test_data/series",
-  "embed_pb_path": "/home/luch/Programming/C++/city_obj_retrieval/tests/test_data/val80_optimized.pb",
-  "segm_pb_path": "/home/luch/Programming/C++/city_obj_retrieval/Xception-Deeplab.pb",
+  "pb_path": "/home/luch/Programming/C++/city_obj_retrieval/Xception-Deeplab.pb",
   "colors_path": "/home/luch/Programming/C++/city_obj_retrieval/classes.csv",
   "input_node": "ImageTensor:0",
-  "output_node": "SemanticPredictions:0",
-  "top_n": 50
+  "output_node": "SemanticPredictions:0"
 }

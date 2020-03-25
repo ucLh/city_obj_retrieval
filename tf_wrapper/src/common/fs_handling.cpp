@@ -56,6 +56,18 @@ bool DataHandling::open_config() {
   return true;
 }
 
+std::string
+DataHandling::try_parse_json_member(rapidjson::Document &doc,
+                                    const std::string &name,
+                                    const std::string &default_val) {
+  if (doc.HasMember(name.c_str())) {
+    rapidjson::Value &value = doc[name.c_str()];
+    return value.GetString();
+  } else {
+    return default_val;
+  }
+}
+
 bool DataHandling::load_config() {
 
   using namespace rapidjson;
@@ -73,23 +85,19 @@ bool DataHandling::load_config() {
     doc.Parse(json_doc_buffer.str().c_str());
     if (doc.IsObject()) {
       rapidjson::Value &input_size = doc["input_size"];
-      rapidjson::Value &datafile_path = doc["datafile_path"];
       rapidjson::Value &img_path = doc["imgs_path"];
       rapidjson::Value &input_node = doc["input_node"];
       rapidjson::Value &output_node = doc["output_node"];
-      rapidjson::Value &embed_pb_path = doc["embed_pb_path"];
-      rapidjson::Value &segm_pb_path = doc["segm_pb_path"];
-      rapidjson::Value &colors_path = doc["colors_path"];
+      rapidjson::Value &embed_pb_path = doc["pb_path"];
 
       config.input_node = input_node.GetString();
       config.output_node = output_node.GetString();
-      config.datafile_path = datafile_path.GetString();
       config.imgs_path = img_path.GetString();
-      config.embed_pb_path = embed_pb_path.GetString();
+      config.pb_path = embed_pb_path.GetString();
       config.input_size.height = input_size.GetArray()[0].GetInt();
       config.input_size.width = input_size.GetArray()[1].GetInt();
-      config.segm_pb_path = segm_pb_path.GetString();
-      config.colors_path = colors_path.GetString();
+      config.datafile_path = try_parse_json_member(doc, "datafile_path");
+      config.colors_path = try_parse_json_member(doc, "colors_path");
       if (doc.HasMember("top_n")) {
         rapidjson::Value &top_n = doc["top_n"];
         config.top_n = top_n.GetInt();
@@ -235,13 +243,7 @@ std::string DataHandling::get_config_output_node() {
   return config.output_node;
 }
 
-std::string DataHandling::get_config_embed_pb_path() {
-  return config.embed_pb_path;
-}
-
-std::string DataHandling::get_config_segm_pb_path() {
-  return config.segm_pb_path;
-}
+std::string DataHandling::get_config_pb_path() { return config.pb_path; }
 
 std::string DataHandling::get_config_imgs_path() { return config.imgs_path; }
 
@@ -270,13 +272,8 @@ bool DataHandling::set_config_output_node(const std::string &output_node) {
   return true;
 }
 
-bool DataHandling::set_config_embed_pb_path(const std::string &embed_pb_path) {
-  config.embed_pb_path = embed_pb_path;
-  return true;
-}
-
-bool DataHandling::set_config_segm_pb_path(const std::string &segm_pb_path) {
-  config.segm_pb_path = segm_pb_path;
+bool DataHandling::set_config_pb_path(const std::string &embed_pb_path) {
+  config.pb_path = embed_pb_path;
   return true;
 }
 

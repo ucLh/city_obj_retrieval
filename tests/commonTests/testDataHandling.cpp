@@ -16,7 +16,7 @@ TEST(load_config, load_config_load_Test) {
   ASSERT_EQ(config.input_size, cv::Size(256, 256));
   ASSERT_EQ(config.datafile_path, "this/is/test/path/testdatafile.txt");
   ASSERT_EQ(config.imgs_path, "this/is/test/path/test_img_path/");
-  ASSERT_EQ(config.embed_pb_path, "this/is/test/path/testpb.pb");
+  ASSERT_EQ(config.pb_path, "this/is/test/path/testpb.pb");
   ASSERT_EQ(config.input_node, "test_input_node:0");
   ASSERT_EQ(config.output_node, "test_output_node:0");
 }

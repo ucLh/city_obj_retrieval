@@ -86,12 +86,10 @@ bool SegmentationWrapperBase::load_config(std::string config_path) {
   db_handler->set_config_path(std::move(config_path));
   if (!db_handler->load_config())
     return false;
-  // TODO this is kinda implicit. Why is converting string to vec.
-  // db_handler->set_config_input_size(_img_des_size);
   _img_des_size = db_handler->get_config_input_size();
   inference_handler->set_input_output({db_handler->get_config_input_node()},
                                       {db_handler->get_config_output_node()});
-  inference_handler->load(db_handler->get_config_segm_pb_path(),
+  inference_handler->load(db_handler->get_config_pb_path(),
                           db_handler->get_config_input_node());
   _is_configured = true;
 

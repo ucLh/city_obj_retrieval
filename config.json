@@ -1,13 +1,11 @@
 {
   "input_size": [
-    1024,
-    1024
+    256,
+    256
   ],
   "datafile_path": "/home/luch/Programming/C++/city_obj_retrieval/data.txt",
   "imgs_path": "/home/luch/Programming/C++/city_obj_retrieval/tests/test_data/series",
-  "embed_pb_path": "/home/luch/Programming/C++/city_obj_retrieval/tests/test_data/val80_optimized.pb",
-  "segm_pb_path": "/home/luch/Programming/C++/city_obj_retrieval/Xception-Deeplab.pb",
-  "colors_path": "/home/luch/Programming/C++/city_obj_retrieval/classes.csv",
+  "pb_path": "/home/luch/Programming/C++/city_obj_retrieval/tests/test_data/val80_optimized.pb",
   "input_node": "image_batch_p:0",
   "output_node": "embeddings:0",
   "top_n": 50
