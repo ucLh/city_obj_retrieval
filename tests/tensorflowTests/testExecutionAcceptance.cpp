@@ -1,5 +1,5 @@
 #include "tf_wrapper/common/common_ops.h"
-#include "tf_wrapper/wrapper_base.h"
+#include "tf_wrapper/embeddings_base.h"
 #include "gtest/gtest.h"
 
 class WrapperBaseTester : public WrapperBase {

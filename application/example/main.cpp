@@ -1,5 +1,5 @@
 #include "command_line_utils.h"
-#include "tf_wrapper/wrapper_base.h"
+#include "tf_wrapper/embeddings_base.h"
 #include <iostream>
 
 #include <string>

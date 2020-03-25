@@ -1,4 +1,4 @@
-#include "tf_wrapper/wrapper_base.h"
+#include "tf_wrapper/embeddings_base.h"
 #include "tf_wrapper/tensorflow_embeddings.h"
 #include "tf_wrapper/wrapper_interfaces.h"
 

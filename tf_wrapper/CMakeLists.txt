@@ -15,7 +15,7 @@ add_library(TF_WRAPPER_EMBEDDING src/tensorflow_base.cpp
         src/tensorflow_wrapper_core.cpp
         src/tensorflow_embeddings.cpp
         src/tensorflow_auxiliary.cpp
-        src/wrapper_base.cpp
+        src/embeddings_base.cpp
         src/wrapper_legacy.cpp
         src/segmentation_base.cpp
         src/tensorflow_segmentator.cpp
