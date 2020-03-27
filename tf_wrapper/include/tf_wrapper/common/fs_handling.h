@@ -36,7 +36,7 @@ image_data_struct resize_img(cv::Mat &orig_img, const cv::Size &size);
 std::vector<std::string> list_imgs(const std::string &dir_path);
 } // namespace fs_img
 
-class DataHandling : public DBInterface {
+class DataHandling : public IDataBase {
 public:
   DataHandling() = default;
   virtual ~DataHandling() = default;

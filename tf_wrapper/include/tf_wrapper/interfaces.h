@@ -39,7 +39,7 @@ public:
   virtual std::vector<cv::Mat> get_output_segmentation_colored() = 0;
 };
 
-class DBInterface {
+class IDataBase {
 public:
   struct data_vec_entry {
     std::string filepath;

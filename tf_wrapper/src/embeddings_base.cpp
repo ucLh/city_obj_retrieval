@@ -100,9 +100,8 @@ bool sort_by_dist(const WrapperBase::distance &a,
   return (a.dist < b.dist);
 }
 
-bool WrapperBase::_matching(
-    const std::vector<DBInterface::data_vec_entry> &base,
-    std::vector<float> &target) {
+bool WrapperBase::_matching(const std::vector<IDataBase::data_vec_entry> &base,
+                            std::vector<float> &target) {
   distances.clear();
   WrapperBase::distance distance;
 

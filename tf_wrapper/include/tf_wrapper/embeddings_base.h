@@ -43,7 +43,7 @@ public:
   inference_and_matching(std::string img_path);
 
 protected:
-  std::unique_ptr<DBInterface> db_handler;
+  std::unique_ptr<IDataBase> db_handler;
   std::unique_ptr<IEmbeddingsInferenceHandler> inference_handler;
   std::vector<std::string> list_of_imgs;
   std::vector<WrapperBase::distance> distances;
@@ -54,7 +54,7 @@ protected:
   //    static float _calc_distance(std::vector<float> base, std::vector<float>
   //    target);
 
-  bool _matching(const std::vector<DBInterface::data_vec_entry> &base,
+  bool _matching(const std::vector<IDataBase::data_vec_entry> &base,
                  std::vector<float> &target);
 
   bool _add_updates();

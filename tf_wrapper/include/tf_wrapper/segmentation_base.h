@@ -63,7 +63,7 @@ protected:
   std::vector<cv::Mat> _imgs;
   std::vector<cv::Mat> _result;
   std::unique_ptr<ISegmentationInterfaceHandler> inference_handler;
-  std::unique_ptr<DBInterface> db_handler;
+  std::unique_ptr<IDataBase> db_handler;
 
 };
 
