@@ -24,10 +24,10 @@ bool cmd_option_exists(char **begin, char **end, const std::string &option) {
 
 std::string parse_command_line(int argc, char **argv, const std::string &c) {
   if (cmd_option_exists(argv, argv + argc, c)) {
-    char *filename = get_cmd_option(argv, argv + argc, c);
-    return std::string(filename);
+    char *option = get_cmd_option(argv, argv + argc, c);
+    return std::string(option);
   } else {
-    std::cout << "Use -img $image$" << std::endl;
+    std::cout << c << " parameter is absent" << std::endl;
     std::exit(EXIT_FAILURE);
   }
 }

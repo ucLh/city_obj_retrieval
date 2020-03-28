@@ -3,10 +3,8 @@
 
 #include "interfaces.h"
 
-class SegmentationWrapperBase
-{
+class SegmentationWrapperBase {
 public:
-
   SegmentationWrapperBase();
 
   ~SegmentationWrapperBase() = default;
@@ -18,29 +16,33 @@ public:
   /// \brief
   /// \param imgs_paths
   /// \return
-  bool set_images(const std::vector<std::string>& imgs_paths); // opt for future_batch
+  bool set_images(
+      const std::vector<std::string> &imgs_paths); // opt for future_batch
 
   /// \brief
   /// \return
   bool process_images();
 
-  /// \brief Method for configuring wrapper if config need to be loaded from file
-  /// \param config_path is a path to .json file with config to wrapper
+  /// \brief Method for configuring wrapper if config need to be loaded from
+  /// file \param config_path is a path to .json file with config to wrapper
   /// \return
   bool load_config(std::string config_path); // ="config.json"
 
   /// \brief Method for configuring wrapper by set all values explicitly
-  /// \param input_size is a size for input images. Need to be set according to network architecture that are using.
-  /// \param colors_path is a path to classes and according colors of dataset that network is pretrained on.
+  /// \param input_size is a size for input images. Need to be set according to
+  /// network architecture that are using. \param colors_path is a path to
+  /// classes and according colors of dataset that network is pretrained on.
   /// \param pb_path is a path for pretrained protobuf file
   /// \param input_node is a name of input node
   /// \param output_node is a name of output node
   /// \return
-  bool configure_wrapper( const cv::Size& input_size,
-                          const std::string& colors_path,
-                          const std::string& pb_path,
-                          const std::string& input_node,
-                          const std::string& output_node);
+  bool configure_wrapper(const cv::Size &input_size,
+                         const std::string &colors_path,
+                         const std::string &pb_path,
+                         const std::string &input_node,
+                         const std::string &output_node);
+
+  bool prepare_for_inference(std::string config_path = "config.json");
 
   /// \brief
   /// \param resized
@@ -64,7 +66,6 @@ protected:
   std::vector<cv::Mat> _result;
   std::unique_ptr<ISegmentationInterfaceHandler> inference_handler;
   std::unique_ptr<IDataBase> db_handler;
-
 };
 
-#endif //TF_WRAPPER_SEGMENTATION_WRAPPER_BASE_H
+#endif // TF_WRAPPER_SEGMENTATION_WRAPPER_BASE_H

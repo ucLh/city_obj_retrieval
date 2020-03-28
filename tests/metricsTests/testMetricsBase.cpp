@@ -2,13 +2,13 @@
 #include "gtest/gtest.h"
 #include <algorithm>
 
-class MetricsBaseWrapper : public MetricsBase {
+class MetricsBaseTester : public MetricsBase {
 public:
   std::vector<std::string> choose_classes_wrapper(
       const std::vector<WrapperBase::distance> &matched_images_list,
-      std::vector<testimg_entry>::iterator &it,
-      unsigned int top_N_classes = 2) {
-    return MetricsBase::choose_classes(matched_images_list, it, top_N_classes);
+      testimg_entry &test_img, unsigned int top_N_classes = 2) {
+    return MetricsBase::choose_classes(matched_images_list, test_img,
+                                       top_N_classes);
   }
 
   static bool check_correctness(MetricsBase::testimg_entry &entry) {
@@ -17,7 +17,7 @@ public:
 };
 
 TEST(_choose_classes, _chooses_topN_unique_classes) {
-  MetricsBaseWrapper wrapper;
+  MetricsBaseTester wrapper;
 
   std::vector<WrapperBase::distance> image_list = {
       {0.1, "series/build1/img/a.jpg"}, {0.2, "series/build2/img/a.jpg"},
@@ -33,15 +33,15 @@ TEST(_choose_classes, _chooses_topN_unique_classes) {
   std::vector<MetricsBase::testimg_entry> img_entry_vec = {img_entry1,
                                                            img_entry2};
 
-  for (auto it = img_entry_vec.begin(); it != img_entry_vec.end(); ++it) {
+  for (auto it : img_entry_vec) {
     auto proposed_classes = wrapper.choose_classes_wrapper(image_list, it, 5);
   }
 
   float val_correct = std::count_if(img_entry_vec.begin(), img_entry_vec.end(),
-                                    MetricsBaseWrapper::check_correctness);
-
-  auto iter = img_entry_vec.begin();
-  auto res_vec = wrapper.choose_classes_wrapper(image_list, iter, 5);
+                                    MetricsBaseTester::check_correctness);
+  
+  auto res_vec =
+      wrapper.choose_classes_wrapper(image_list, img_entry_vec[0], 5);
   ASSERT_FALSE(img_entry_vec[0].is_correct);
   ASSERT_TRUE(img_entry_vec[1].is_correct);
   ASSERT_EQ(val_correct, 1.0);

@@ -28,7 +28,8 @@ tensorflow::Tensor convert_mat_to_tensor(const std::vector<cv::Mat> &imgs,
     return Tensor();
   }
 
-  Tensor input(T, TensorShape({imgs.size(), height, width, depth}));
+  Tensor input(T, TensorShape({static_cast<long long>(imgs.size()), height,
+                               width, depth}));
 
   using POD_type = typename tensorflow::EnumToDataType<T>::Type;
   auto input_tensor_mapped = input.tensor<POD_type, 4>();

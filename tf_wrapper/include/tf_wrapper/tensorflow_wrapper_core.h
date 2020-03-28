@@ -137,7 +137,7 @@ protected:
 
   int _gpu_number = -1;
   double _gpu_memory_fraction = 0.;
-  bool _allow_growth = false;
+  bool _allow_growth = true;
 };
 
 #endif // TF_WRAPPER_EMBEDDING_TENSORFLOW_WRAPPER_CORE_H

@@ -32,9 +32,11 @@ public:
   /// \return if custom config is used
   //    bool setConfigPath(std::string path);
 
+  bool load_config(std::string config_path);
+
   /// \brief main method used for reading images in directory and adding the to
   /// th database \return
-  virtual bool prepare_for_inference();
+  virtual bool prepare_for_inference(std::string config_path);
 
   /// \brief main method used for matching passed image with images that already
   /// in database \param img_path passed image \return vector of distances
@@ -43,16 +45,11 @@ public:
   inference_and_matching(std::string img_path);
 
 protected:
+  bool _is_configured = false;
   std::unique_ptr<IDataBase> db_handler;
   std::unique_ptr<IEmbeddingsInferenceHandler> inference_handler;
   std::vector<std::string> list_of_imgs;
   std::vector<WrapperBase::distance> distances;
-
-  std::vector<std::string> _input_nodes;
-  std::vector<std::string> _output_nodes;
-
-  //    static float _calc_distance(std::vector<float> base, std::vector<float>
-  //    target);
 
   bool _matching(const std::vector<IDataBase::data_vec_entry> &base,
                  std::vector<float> &target);

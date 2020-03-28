@@ -1,6 +1,7 @@
 #include "tf_wrapper/embeddings_base.h"
 #include "tf_wrapper/tensorflow_embeddings.h"
 #include "tf_wrapper/wrapper_interfaces.h"
+#include <utility>
 
 WrapperBase::WrapperBase() {
   db_handler = std::make_unique<DataHandling>();
@@ -8,20 +9,34 @@ WrapperBase::WrapperBase() {
   topN = 1;
 }
 
-bool WrapperBase::prepare_for_inference() {
+bool WrapperBase::load_config(std::string config_path) {
+  db_handler->set_config_path(std::move(config_path));
   if (!db_handler->load_config()) {
     std::cerr << "Can't load config!" << std::endl;
     return false;
   }
-
-  _input_nodes = {db_handler->get_config_input_node()};
-  _output_nodes = {db_handler->get_config_output_node()};
-
+  inference_handler->set_input_output({db_handler->get_config_input_node()},
+                                      {db_handler->get_config_output_node()});
+  inference_handler->load(db_handler->get_config_pb_path(),
+                          db_handler->get_config_input_node());
+  _is_configured = true;
   std::cout << "Config was loaded" << std::endl;
-  db_handler->load_database();
+
+  return true;
+}
+
+bool WrapperBase::prepare_for_inference(std::string config_path) {
+  if (!load_config(std::move(config_path))) {
+    return false;
+  }
+
+  if (!db_handler->load_database()) {
+    std::cerr << "Can't load database" << std::endl;
+    return false;
+  }
   std::cout << "Database was loaded" << std::endl;
-  list_of_imgs =
-      fs_img::list_imgs(db_handler->get_config_imgs_path()); // TODO rewrite it
+
+  list_of_imgs = fs_img::list_imgs(db_handler->get_config_imgs_path());
   _check_for_updates();
   if (!list_of_imgs.empty()) {
     _add_updates();
@@ -33,16 +48,15 @@ bool WrapperBase::prepare_for_inference() {
 
 std::vector<WrapperBase::distance>
 WrapperBase::inference_and_matching(std::string img_path) {
+  if (!_is_configured) {
+    std::cerr << "You need to configure wrapper first!" << std::endl;
+    exit(1); // TODO: rethink it
+  }
   std::vector<float> embedding;
 
   topN = db_handler->get_config_top_n();
   cv::Mat img = fs_img::read_img(img_path);
 
-  if (!inference_handler->is_loaded()) {
-    inference_handler->load(db_handler->get_config_pb_path(), _input_nodes[0]);
-  }
-
-  inference_handler->set_input_output(_input_nodes, _output_nodes);
   inference_handler->inference({img});
 
   embedding = inference_handler->get_output_embeddings()[0];
@@ -56,11 +70,10 @@ WrapperBase::inference_and_matching(std::string img_path) {
 bool WrapperBase::_add_updates() {
   std::cout << "Adding updates to database..." << std::endl;
   cv::Mat img; // TODO rethink this logic..
-  if (!inference_handler->is_loaded()) {
-    inference_handler->load(db_handler->get_config_pb_path(),
-                            db_handler->get_config_input_node());
+  if (!_is_configured) {
+    std::cerr << "You need to configure wrapper first!" << std::endl;
+    return false;
   }
-  inference_handler->set_input_output(_input_nodes, _output_nodes);
   std::vector<float> out_embedding; // TODO remember about batch
   DataHandling::data_vec_entry new_data;
   for (const auto &img_path : list_of_imgs) {

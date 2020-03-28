@@ -33,9 +33,9 @@ bool SegmentationWrapperBase::process_images() {
   inference_handler->clear_data(); /// Need to clear data that may be saved from
                                    /// previous launch
   for (unsigned long i = 0; i < _imgs.size(); ++i) {
+    inference_handler->inference({_imgs[i]});
     std::cout << "Wrapper Info:" << i + 1 << " of " << _imgs.size()
               << " was processed" << std::endl;
-    inference_handler->inference({_imgs[i]});
   }
   return true;
 }
@@ -84,8 +84,10 @@ bool SegmentationWrapperBase::configure_wrapper(
 
 bool SegmentationWrapperBase::load_config(std::string config_path) {
   db_handler->set_config_path(std::move(config_path));
-  if (!db_handler->load_config())
+  if (!db_handler->load_config()) {
+    std::cerr << "Can't load config!" << std::endl;
     return false;
+  }
   _img_des_size = db_handler->get_config_input_size();
   inference_handler->set_input_output({db_handler->get_config_input_node()},
                                       {db_handler->get_config_output_node()});
@@ -94,6 +96,12 @@ bool SegmentationWrapperBase::load_config(std::string config_path) {
   _is_configured = true;
 
   return true;
+}
+
+bool SegmentationWrapperBase::prepare_for_inference(std::string config_path) {
+  load_config(std::move(config_path));
+  auto list_of_imgs = fs_img::list_imgs(db_handler->get_config_imgs_path());
+  set_images(list_of_imgs);
 }
 
 bool SegmentationWrapperBase::set_gpu(int value) {

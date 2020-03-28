@@ -29,11 +29,11 @@ public:
 
   auto get_list_of_imgs() { return list_of_imgs; }
 
-  auto load_config() { return db_handler->load_config(); }
+  //  auto load_config() { return db_handler->load_config(); }
 
   auto set_nodes() {
-    _input_nodes = {db_handler->get_config_input_node()};
-    _output_nodes = {db_handler->get_config_output_node()};
+    inference_handler->set_input_output({db_handler->get_config_input_node()},
+                                        {db_handler->get_config_output_node()});
   }
 
   auto set_config_path(const std::string &path) {
@@ -190,10 +190,8 @@ TEST(_add_updates, adds_new_images) {
   test_list_of_imgs.emplace_back("./Lenna.jpg");
 
   wrapper.set_data_vec_base(test_base);
+  wrapper.load_config("./config.json");
   wrapper.set_list_of_imgs(test_list_of_imgs);
-  wrapper.set_config_path("./config.json");
-  wrapper.load_config();
-  wrapper.set_nodes();
 
   wrapper.add_updates();
 

@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
       cmd_utils::parse_command_line(argc, argv, std::string("-img"));
 
   WrapperBase tf_wrapper;
-  if (!tf_wrapper.prepare_for_inference()) {
+  if (!tf_wrapper.prepare_for_inference("config.json")) {
     std::cerr << "Can't prepare for inference!" << std::endl;
     return 1;
   }

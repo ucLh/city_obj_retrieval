@@ -35,11 +35,10 @@ public:
 protected:
   std::vector<testimg_entry> testimg_vector;
 
-  bool prepare_for_inference() override;
+  bool prepare_for_inference(std::string config_path) override;
   std::vector<std::string>
   choose_classes(const std::vector<WrapperBase::distance> &matched_images_list,
-                 std::vector<testimg_entry>::iterator &it,
-                 unsigned int top_N_classes);
+                 testimg_entry &test_img, unsigned int top_N_classes);
 };
 
 #endif // TF_WRAPPER_METRICS_BASE_H
