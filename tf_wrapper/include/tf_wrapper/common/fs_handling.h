@@ -31,7 +31,7 @@ struct image_data_struct {
 
 cv::Mat read_img(const std::string &im_filename);
 
-image_data_struct resize_img(cv::Mat &orig_img, const cv::Size &size);
+image_data_struct resize_img(const cv::Mat &orig_img, const cv::Size &size);
 
 std::vector<std::string> list_imgs(const std::string &dir_path);
 } // namespace fs_img

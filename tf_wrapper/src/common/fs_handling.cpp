@@ -15,7 +15,7 @@ cv::Mat fs_img::read_img(const std::string &im_filename) {
   return img;
 }
 
-fs_img::image_data_struct fs_img::resize_img(cv::Mat &orig_img,
+fs_img::image_data_struct fs_img::resize_img(const cv::Mat &orig_img,
                                              const cv::Size &size) {
   fs_img::image_data_struct out_data;
   out_data.img_data = orig_img;
@@ -103,7 +103,6 @@ bool DataHandling::load_config() {
         config.top_n = top_n.GetInt();
       } else {
         config.top_n = 5;
-        std::cerr << "TopN not defined, Using TopN = 5" << std::endl;
       }
       return true;
     } else

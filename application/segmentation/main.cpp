@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
   if (is_colored) {
     output_indices = seg_wrapper.get_colored(true);
   } else {
-    output_indices = seg_wrapper.get_indices(true);
+    output_indices = seg_wrapper.get_indexed(true);
   }
   for (unsigned long i = 0; i < output_indices.size(); ++i) {
     cv::imwrite(cv::format("out_%i.png", i), output_indices[i]);

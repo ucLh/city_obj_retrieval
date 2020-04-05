@@ -5,9 +5,10 @@
 
 #include <utility>
 
-SegmentationWrapperBase::SegmentationWrapperBase()
-    : inference_handler(new SegmentationInferenceHandler),
-      db_handler(new DataHandling) {}
+SegmentationWrapperBase::SegmentationWrapperBase() {
+  inference_handler = std::make_unique<SegmentationInferenceHandler>();
+  db_handler = std::make_unique<DataHandling>();
+}
 
 bool SegmentationWrapperBase::set_images(
     const std::vector<std::string> &imgs_paths) {
@@ -15,32 +16,46 @@ bool SegmentationWrapperBase::set_images(
     std::cerr << "You need to configure wrapper first!" << std::endl;
     return false;
   }
-  fs_img::image_data_struct cur_img;
+  if (!_imgs.empty()) { /// Delete previously processed images
+    _imgs.clear();
+  }
+  cv::Mat img;
   for (const auto &img_path : imgs_paths) {
-    cv::Mat img = fs_img::read_img(img_path);
-    cur_img = fs_img::resize_img(img, _img_des_size);
-    _imgs.emplace_back(std::move(cur_img.img_data));
-    _img_orig_size.emplace_back(std::move(cur_img.orig_size));
+    img = fs_img::read_img(img_path);
+    _img_orig_size.emplace_back(img.size());
+    _imgs.emplace_back(std::move(img));
   }
   return true;
 }
 
 bool SegmentationWrapperBase::process_images() {
+  return process_images(_imgs);
+}
+
+bool SegmentationWrapperBase::process_images(
+    const std::vector<std::string> &imgs_paths) {
+  set_images(imgs_paths);
+  process_images();
+}
+
+bool SegmentationWrapperBase::process_images(const std::vector<cv::Mat> &images) {
   if (!_is_configured) {
     std::cerr << "You need to configure wrapper first!" << std::endl;
     return false;
   }
+  fs_img::image_data_struct resized_img;
   inference_handler->clear_data(); /// Need to clear data that may be saved from
                                    /// previous launch
-  for (unsigned long i = 0; i < _imgs.size(); ++i) {
-    inference_handler->inference({_imgs[i]});
-    std::cout << "Wrapper Info:" << i + 1 << " of " << _imgs.size()
+  for (unsigned long i = 0; i < images.size(); ++i) {
+    resized_img = fs_img::resize_img(images[i], _img_des_size);
+    inference_handler->inference({resized_img.img_data});
+    std::cout << "Wrapper Info:" << i + 1 << " of " << images.size()
               << " was processed" << std::endl;
   }
   return true;
 }
 
-std::vector<cv::Mat> SegmentationWrapperBase::get_indices(bool resized) {
+std::vector<cv::Mat> SegmentationWrapperBase::get_indexed(bool resized) {
   std::vector<cv::Mat> indices =
       inference_handler->get_output_segmentation_indices();
   if (resized) {
@@ -100,7 +115,7 @@ bool SegmentationWrapperBase::load_config(std::string config_path) {
 
 bool SegmentationWrapperBase::prepare_for_inference(std::string config_path) {
   load_config(std::move(config_path));
-  auto list_of_imgs = fs_img::list_imgs(db_handler->get_config_imgs_path());
+  list_of_imgs = fs_img::list_imgs(db_handler->get_config_imgs_path());
   set_images(list_of_imgs);
 }
 
