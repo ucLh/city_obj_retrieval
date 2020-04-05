@@ -3,13 +3,13 @@
 #include "tf_wrapper/wrapper_interfaces.h"
 #include <utility>
 
-WrapperBase::WrapperBase() {
+EmbeddingsBase::EmbeddingsBase() {
   db_handler = std::make_unique<DataHandling>();
   inference_handler = std::make_unique<EmbeddingsInferenceHandler>();
   topN = 1;
 }
 
-bool WrapperBase::load_config(std::string config_path) {
+bool EmbeddingsBase::load_config(std::string config_path) {
   db_handler->set_config_path(std::move(config_path));
   if (!db_handler->load_config()) {
     std::cerr << "Can't load config!" << std::endl;
@@ -25,7 +25,7 @@ bool WrapperBase::load_config(std::string config_path) {
   return true;
 }
 
-bool WrapperBase::prepare_for_inference(std::string config_path) {
+bool EmbeddingsBase::prepare_for_inference(std::string config_path) {
   if (!load_config(std::move(config_path))) {
     return false;
   }
@@ -46,8 +46,8 @@ bool WrapperBase::prepare_for_inference(std::string config_path) {
   return true;
 }
 
-std::vector<WrapperBase::distance>
-WrapperBase::inference_and_matching(std::string img_path) {
+std::vector<EmbeddingsBase::distance>
+EmbeddingsBase::inference_and_matching(std::string img_path) {
   if (!_is_configured) {
     std::cerr << "You need to configure wrapper first!" << std::endl;
     exit(1); // TODO: rethink it
@@ -67,7 +67,7 @@ WrapperBase::inference_and_matching(std::string img_path) {
   return distances;
 }
 
-bool WrapperBase::_add_updates() {
+bool EmbeddingsBase::_add_updates() {
   std::cout << "Adding updates to database..." << std::endl;
   cv::Mat img; // TODO rethink this logic..
   if (!_is_configured) {
@@ -89,7 +89,7 @@ bool WrapperBase::_add_updates() {
   return true;
 }
 
-bool WrapperBase::_check_for_updates() {
+bool EmbeddingsBase::_check_for_updates() {
   for (const auto &entry : db_handler->get_data_vec_base()) {
     for (auto img_path = list_of_imgs.begin();
          img_path != list_of_imgs.end();) {
@@ -108,15 +108,15 @@ bool WrapperBase::_check_for_updates() {
 
   return true;
 }
-bool sort_by_dist(const WrapperBase::distance &a,
-                  const WrapperBase::distance &b) {
+bool sort_by_dist(const EmbeddingsBase::distance &a,
+                  const EmbeddingsBase::distance &b) {
   return (a.dist < b.dist);
 }
 
-bool WrapperBase::_matching(const std::vector<IDataBase::data_vec_entry> &base,
+bool EmbeddingsBase::_matching(const std::vector<IDataBase::data_vec_entry> &base,
                             std::vector<float> &target) {
   distances.clear();
-  WrapperBase::distance distance;
+  EmbeddingsBase::distance distance;
 
   if (base.empty() or target.empty()) {
     return false;

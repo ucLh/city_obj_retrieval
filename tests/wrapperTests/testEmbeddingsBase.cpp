@@ -4,7 +4,7 @@
 #include "tf_wrapper/embeddings_base.h"
 #include "gtest/gtest.h"
 
-class WrapperBaseTester : public WrapperBase {
+class WrapperBaseTester : public EmbeddingsBase {
 public:
   auto matching(std::vector<DataHandling::data_vec_entry> &base,
                 std::vector<float> &target) {

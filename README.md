@@ -55,7 +55,7 @@ In order to interact with a library you should connect it via Cmake and include 
 2. Call a `prepare_for_inference()` method.
 3. Call a `inference_and_matching(img_path)` method with the argument that is the path to a query image. This method
 
-Method _`inference_and_matching`_ will return `std::vector<WrapperBase::distance>` - a vector with `"top_n"` image
+Method _`inference_and_matching`_ will return `std::vector<EmbeddingsBase::distance>` - a vector with `"top_n"` image
  paths representing images closest to a query image. 
 
 #### Example

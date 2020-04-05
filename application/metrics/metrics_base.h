@@ -4,7 +4,7 @@
 #include "tf_wrapper/embeddings_base.h"
 #include <algorithm>
 
-class MetricsBase : public WrapperBase {
+class MetricsBase : public EmbeddingsBase {
 public:
   MetricsBase() {
     //        this->topN = 5;
@@ -19,7 +19,7 @@ public:
   /// \return value of accuracy
   float get_metrics(std::string &testimg_path, int top_N_classes = 4);
 
-  std::vector<WrapperBase::distance>
+  std::vector<EmbeddingsBase::distance>
   inference_and_matching(std::string img_path) override;
 
   struct testimg_entry {
@@ -37,7 +37,7 @@ protected:
 
   bool prepare_for_inference(std::string config_path) override;
   std::vector<std::string>
-  choose_classes(const std::vector<WrapperBase::distance> &matched_images_list,
+  choose_classes(const std::vector<EmbeddingsBase::distance> &matched_images_list,
                  testimg_entry &test_img, unsigned int top_N_classes);
 };
 

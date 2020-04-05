@@ -9,14 +9,14 @@ int main(int argc, char *argv[]) {
   std::string const in_file_name =
       cmd_utils::parse_command_line(argc, argv, std::string("-img"));
 
-  WrapperBase tf_wrapper;
+  EmbeddingsBase tf_wrapper;
   if (!tf_wrapper.prepare_for_inference("config.json")) {
     std::cerr << "Can't prepare for inference!" << std::endl;
     return 1;
   }
   //    tf_wrapper->topN = 10;
 
-  std::vector<WrapperBase::distance> results =
+  std::vector<EmbeddingsBase::distance> results =
       tf_wrapper.inference_and_matching(in_file_name);
   //    common_ops::delete_safe(tf_wrapper);
 

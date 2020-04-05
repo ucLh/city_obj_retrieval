@@ -2,7 +2,7 @@
 #include "tf_wrapper/embeddings_base.h"
 #include "gtest/gtest.h"
 
-class WrapperBaseTester : public WrapperBase {
+class WrapperBaseTester : public EmbeddingsBase {
 public:
   auto set_config_path(const std::string &path) {
     db_handler->set_config_path(path);
@@ -17,7 +17,7 @@ TEST(EXECUTION, EXECUTION_Acceptance_Test) {
   tf_wrapper.prepare_for_inference();
   tf_wrapper.topN = 1;
 
-  std::vector<WrapperBase::distance> results =
+  std::vector<EmbeddingsBase::distance> results =
       tf_wrapper.inference_and_matching(inFileName);
   std::string predicted_class = common_ops::extract_class(results[0].path);
   ASSERT_EQ(predicted_class, gt_class);
