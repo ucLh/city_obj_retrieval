@@ -17,19 +17,13 @@ int main(int argc, char *argv[]) {
 
   seg_wrapper.prepare_for_inference("config.json");
 
-  //  seg_wrapper.configure_wrapper(
-  //      cv::Size(1024, 1024),
-  //      "/home/luch/Programming/C++/city_obj_retrieval/classes.csv",
-  //      "/home/luch/Programming/C++/city_obj_retrieval/Xception-Deeplab.pb",
-  //      "ImageTensor:0", "SemanticPredictions:0");
-
   //    PROFILE_BLOCK("process images");
   if (!seg_wrapper.process_images())
     std::cerr << "Failed to process images" << std::endl;
   if (is_colored) {
     output_indices = seg_wrapper.get_colored(true);
   } else {
-    output_indices = seg_wrapper.get_indexed(true);
+    output_indices = seg_wrapper.get_masked(true, {8, 13, 11});
   }
   for (unsigned long i = 0; i < output_indices.size(); ++i) {
     cv::imwrite(cv::format("out_%i.png", i), output_indices[i]);

@@ -10,6 +10,28 @@ SegmentationWrapperBase::SegmentationWrapperBase() {
   db_handler = std::make_unique<DataHandling>();
 }
 
+bool SegmentationWrapperBase::load_config(std::string config_path) {
+  db_handler->set_config_path(std::move(config_path));
+  if (!db_handler->load_config()) {
+    std::cerr << "Can't load config!" << std::endl;
+    return false;
+  }
+  _img_des_size = db_handler->get_config_input_size();
+  inference_handler->set_input_output({db_handler->get_config_input_node()},
+                                      {db_handler->get_config_output_node()});
+  inference_handler->load(db_handler->get_config_pb_path(),
+                          db_handler->get_config_input_node());
+  _is_configured = true;
+
+  return true;
+}
+
+bool SegmentationWrapperBase::prepare_for_inference(std::string config_path) {
+  load_config(std::move(config_path));
+  list_of_imgs = fs_img::list_imgs(db_handler->get_config_imgs_path());
+  set_images(list_of_imgs);
+}
+
 bool SegmentationWrapperBase::set_images(
     const std::vector<std::string> &imgs_paths) {
   if (!_is_configured) {
@@ -83,40 +105,27 @@ std::vector<cv::Mat> SegmentationWrapperBase::get_colored(bool resized) {
   return colored_indices;
 }
 
-/// For in-code parameter specification
-bool SegmentationWrapperBase::configure_wrapper(
-    const cv::Size &input_size, const std::string &colors_path,
-    const std::string &pb_path, const std::string &input_node,
-    const std::string &output_node) {
-  _img_des_size = input_size;
-  inference_handler->set_input_output({input_node}, {output_node});
-  inference_handler->load(pb_path, input_node);
-  db_handler->set_config_colors_path(colors_path);
-
-  _is_configured = true;
-  return true;
-}
-
-bool SegmentationWrapperBase::load_config(std::string config_path) {
-  db_handler->set_config_path(std::move(config_path));
-  if (!db_handler->load_config()) {
-    std::cerr << "Can't load config!" << std::endl;
-    return false;
+std::vector<cv::Mat>
+SegmentationWrapperBase::get_masked(bool resized,
+                                    const std::set<int> &classes_to_mask) {
+  std::vector<cv::Mat> indices = SegmentationWrapperBase::get_indexed(resized);
+  std::vector<cv::Mat> result_imgs;
+  for (unsigned long i = 0; i < indices.size(); ++i) {
+    auto cur_img = _imgs[_imgs.size() - i - 1];
+    for (int x = 0; x < indices[i].rows; ++x) {
+      for (int y = 0; y < indices[i].cols; ++y) {
+        auto pixel = indices[i].at<cv::Vec3b>(x, y)[0];
+        if (classes_to_mask.count(pixel) != 0) {
+          auto &color = cur_img.at<cv::Vec3b>(x, y);
+          color[0] = 0;
+          color[1] = 0;
+          color[2] = 0;
+        }
+      }
+    }
+    result_imgs.emplace_back(cur_img);
   }
-  _img_des_size = db_handler->get_config_input_size();
-  inference_handler->set_input_output({db_handler->get_config_input_node()},
-                                      {db_handler->get_config_output_node()});
-  inference_handler->load(db_handler->get_config_pb_path(),
-                          db_handler->get_config_input_node());
-  _is_configured = true;
-
-  return true;
-}
-
-bool SegmentationWrapperBase::prepare_for_inference(std::string config_path) {
-  load_config(std::move(config_path));
-  list_of_imgs = fs_img::list_imgs(db_handler->get_config_imgs_path());
-  set_images(list_of_imgs);
+  return result_imgs;
 }
 
 bool SegmentationWrapperBase::set_gpu(int value) {
