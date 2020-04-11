@@ -4,30 +4,31 @@
 
 std::vector<cv::Mat> TensorFlowSegmentator::get_output_segmentation_indices() {
   std::vector<cv::Mat> _out_data;
-  if (_indices.empty()) {
-    for (const auto &output : _out_tensors_vector) {
-      _out_data =
-          std::move(TensorFlowSegmentator::convert_tensor_to_mat(output));
-      _indices.insert(_indices.begin(), _out_data.begin(), _out_data.end());
-      //            this->_indices.emplace_back(TensorFlowSegmentator::convertTensorToMat(output));
-    }
-  } else
-    _indices = {};
+  if (!_indices.empty()) {
+    _indices.clear();
+  }
+  for (const auto &output : _out_tensors_vector) {
+    _out_data = std::move(TensorFlowSegmentator::convert_tensor_to_mat(output));
+    _indices.insert(_indices.end(), _out_data.begin(), _out_data.end());
+  }
   return _indices;
 }
 
 std::vector<cv::Mat> TensorFlowSegmentator::get_output_segmentation_colored() {
+  if (!_indices.empty()) {
+    _indices.clear();
+  }
   std::vector<cv::Mat> _out_data;
-  if (_indices.empty() && !_colors.empty()) {
+  if (!_colors.empty()) {
     for (const auto &output : _out_tensors_vector) {
       _out_data =
           std::move(TensorFlowSegmentator::convert_tensor_to_mat(output));
-      _indices.insert(_indices.begin(), _out_data.begin(), _out_data.end());
+      _indices.insert(_indices.end(), _out_data.begin(), _out_data.end());
     }
   } else {
     std::cerr << "Colors not set" << std::endl;
-    _indices = {};
   }
+  _colors.clear();
   return _indices;
 }
 

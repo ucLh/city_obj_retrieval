@@ -27,7 +27,7 @@ fs_img::image_data_struct fs_img::resize_img(const cv::Mat &orig_img,
 
 bool path_is_img(std::string &path) {
   auto extension = path.substr(path.find_last_of('.') + 1);
-  return extension == "jpg" || extension == "JPG";
+  return extension == "jpg" || extension == "JPG" || extension == "png";
 }
 
 std::vector<std::string> fs_img::list_imgs(const std::string &dir_path) {
@@ -38,6 +38,7 @@ std::vector<std::string> fs_img::list_imgs(const std::string &dir_path) {
       vector_of_data.emplace_back(entry.path());
     }
   }
+  std::sort(vector_of_data.begin(), vector_of_data.end());
   return vector_of_data;
 }
 

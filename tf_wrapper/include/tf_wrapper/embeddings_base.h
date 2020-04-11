@@ -14,11 +14,7 @@ class EmbeddingsBase {
 public:
   EmbeddingsBase();
 
-  ~EmbeddingsBase(){
-      //        common_ops::delete_safe(inference_handler);
-      //        common_ops::delete_safe(db_handler);
-      //        common_ops::delete_safe(inference_handler);
-  };
+  ~EmbeddingsBase() = default;
 
   struct distance {
     float dist;
@@ -35,12 +31,14 @@ public:
   bool load_config(std::string config_path);
 
   /// \brief main method used for reading images in directory and adding the to
-  /// th database \return
+  /// th database
+  /// \return
   virtual bool prepare_for_inference(std::string config_path);
 
   /// \brief main method used for matching passed image with images that already
-  /// in database \param img_path passed image \return vector of distances
-  /// between passed image and db images
+  /// in database
+  /// \param img_path passed image
+  /// \return vector of distance between passed image and db images
   virtual std::vector<EmbeddingsBase::distance>
   inference_and_matching(std::string img_path);
 

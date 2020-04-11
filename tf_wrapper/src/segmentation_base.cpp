@@ -111,7 +111,7 @@ SegmentationWrapperBase::get_masked(bool resized,
   std::vector<cv::Mat> indices = SegmentationWrapperBase::get_indexed(resized);
   std::vector<cv::Mat> result_imgs;
   for (unsigned long i = 0; i < indices.size(); ++i) {
-    auto cur_img = _imgs[_imgs.size() - i - 1];
+    auto cur_img = _imgs[i];
     for (int x = 0; x < indices[i].rows; ++x) {
       for (int y = 0; y < indices[i].cols; ++y) {
         auto pixel = indices[i].at<cv::Vec3b>(x, y)[0];
