@@ -2,19 +2,11 @@
 #include "tf_wrapper/embeddings_base.h"
 #include "gtest/gtest.h"
 
-class WrapperBaseTester : public EmbeddingsBase {
-public:
-  auto set_config_path(const std::string &path) {
-    db_handler->set_config_path(path);
-  }
-};
-
 TEST(EXECUTION, EXECUTION_Acceptance_Test) {
   std::string inFileName = "queries/helsinki_1_andante/IMG_7813_4.jpg";
   std::string gt_class = common_ops::extract_class(inFileName);
-  WrapperBaseTester tf_wrapper;
-  tf_wrapper.set_config_path("config.json");
-  tf_wrapper.prepare_for_inference();
+  EmbeddingsBase tf_wrapper;
+  tf_wrapper.prepare_for_inference("config.json");
   tf_wrapper.topN = 1;
 
   std::vector<EmbeddingsBase::distance> results =

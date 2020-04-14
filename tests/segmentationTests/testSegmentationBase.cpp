@@ -3,9 +3,8 @@
 #include "gtest/gtest.h"
 
 #include <vector>
-#include <utility>
 
-void load_images(std::vector<cv::Mat> &images, const std::string& dir_path) {
+void load_images(std::vector<cv::Mat> &images, const std::string &dir_path) {
   auto image_paths = fs_img::list_imgs(dir_path);
   for (const auto &path : image_paths) {
     images.emplace_back(fs_img::read_img(path));
@@ -49,4 +48,56 @@ TEST(segmentation_modes, preserves_order) {
   check_equality(indexed_results, indexed_images);
   check_equality(colored_results, colored_images);
   check_equality(masked_results, masked_images);
+}
+
+TEST(process_images, inferences_input) {
+  SegmentationWrapperBase seg_wrapper;
+  seg_wrapper.prepare_for_inference("seg_config.json");
+  seg_wrapper.process_images();
+  int size = seg_wrapper.get_indexed(true).size();
+  ASSERT_EQ(size, 4);
+}
+
+TEST(process_images_w_paths, inferences_input) {
+  auto image_paths = fs_img::list_imgs("helsinki_2_apteeki");
+
+  SegmentationWrapperBase seg_wrapper;
+  seg_wrapper.prepare_for_inference("seg_config.json");
+  seg_wrapper.process_images(image_paths);
+  int size = seg_wrapper.get_indexed(true).size();
+  ASSERT_EQ(size, 4);
+}
+
+TEST(process_images_w_images, inferences_input) {
+  std::vector<cv::Mat> images;
+  load_images(images, "helsinki_2_apteeki");
+
+  SegmentationWrapperBase seg_wrapper;
+  seg_wrapper.prepare_for_inference("seg_config.json");
+  seg_wrapper.process_images(images);
+  int size = seg_wrapper.get_indexed(true).size();
+  ASSERT_EQ(size, 4);
+}
+
+TEST(process_images, handles_multiple_calls) {
+  std::vector<cv::Mat> colored_images1, colored_images2, images1, images2;
+  load_images(colored_images1, "segmented_images/colored");
+  load_images(colored_images2, "segmented_images/helsinki_3");
+  load_images(images1, "helsinki_2_apteeki");
+  load_images(images2, "helsinki_3_usadba");
+
+  SegmentationWrapperBase seg_wrapper;
+  seg_wrapper.prepare_for_inference("seg_config.json");
+  
+  seg_wrapper.process_images(images1);
+  auto colored_results1 = seg_wrapper.get_colored(true);
+  colored_results1 = seg_wrapper.get_colored(true);
+  ASSERT_EQ(colored_results1.size(), colored_images1.size());
+  check_equality(colored_results1, colored_images1);
+
+  seg_wrapper.process_images(images2);
+  auto colored_results2 = seg_wrapper.get_colored(true);
+  colored_results2 = seg_wrapper.get_colored(true);
+  ASSERT_EQ(colored_results2.size(), colored_images2.size());
+  check_equality(colored_results2, colored_images2);
 }

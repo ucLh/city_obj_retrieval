@@ -1,7 +1,6 @@
 set(MODULE_NAME tensorflowTests)
 set(SRC_FILES
         ${CMAKE_CURRENT_LIST_DIR}/testExecutionAcceptance.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/testTensorflowCorrectness.cpp
         )
 
 add_executable(${MODULE_NAME} ${SRC_FILES})

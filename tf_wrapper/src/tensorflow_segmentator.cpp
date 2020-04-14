@@ -95,8 +95,8 @@ std::string TensorFlowSegmentator::inference(const std::vector<cv::Mat> &imgs) {
   _status = _session->Run(inputs, _output_node_names, {}, &_output_tensors);
 
   /// _output_tensors is a vector of tensors where each tensor represent every
-  /// possible output from net taking 0'th out we targeting tensor that contains
-  /// output indices that we need
+  /// possible output from net taking 0'th out we are targeting tensor that
+  /// contains output indices that we need
 
   _out_tensors_vector.emplace_back(std::move(_output_tensors[0]));
   TF_CHECK_OK(_status);
