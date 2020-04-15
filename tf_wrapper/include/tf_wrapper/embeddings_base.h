@@ -10,11 +10,11 @@ static float calc_distance_euclid(std::vector<float> base,
 float calc_distance_cosine(std::vector<float> base, std::vector<float> target);
 } // namespace EmbeddingMatching
 
-class EmbeddingsBase {
+class EmbeddingsWrapper {
 public:
-  EmbeddingsBase();
+  EmbeddingsWrapper();
 
-  ~EmbeddingsBase() = default;
+  ~EmbeddingsWrapper() = default;
 
   struct distance {
     float dist;
@@ -39,7 +39,7 @@ public:
   /// in database
   /// \param img_path passed image
   /// \return vector of distance between passed image and db images
-  virtual std::vector<EmbeddingsBase::distance>
+  virtual std::vector<EmbeddingsWrapper::distance>
   inference_and_matching(std::string img_path);
 
 protected:
@@ -47,7 +47,7 @@ protected:
   std::unique_ptr<IDataBase> db_handler;
   std::unique_ptr<IEmbeddingsInferenceHandler> inference_handler;
   std::vector<std::string> list_of_imgs;
-  std::vector<EmbeddingsBase::distance> distances;
+  std::vector<EmbeddingsWrapper::distance> distances;
 
   bool _matching(const std::vector<IDataBase::data_vec_entry> &base,
                  std::vector<float> &target);

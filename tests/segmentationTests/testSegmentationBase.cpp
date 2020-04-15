@@ -29,7 +29,7 @@ TEST(segmentation_modes, preserves_order) {
   // Sanity check
   ASSERT_TRUE(cv::countNonZero(indexed_images[0] != indexed_images[0]) == 0);
 
-  SegmentationWrapperBase seg_wrapper;
+  SegmentationWrapper seg_wrapper;
   seg_wrapper.prepare_for_inference("seg_config.json");
   seg_wrapper.process_images();
   auto indexed_results = seg_wrapper.get_indexed(true);
@@ -51,7 +51,7 @@ TEST(segmentation_modes, preserves_order) {
 }
 
 TEST(process_images, inferences_input) {
-  SegmentationWrapperBase seg_wrapper;
+  SegmentationWrapper seg_wrapper;
   seg_wrapper.prepare_for_inference("seg_config.json");
   seg_wrapper.process_images();
   int size = seg_wrapper.get_indexed(true).size();
@@ -61,7 +61,7 @@ TEST(process_images, inferences_input) {
 TEST(process_images_w_paths, inferences_input) {
   auto image_paths = fs_img::list_imgs("helsinki_2_apteeki");
 
-  SegmentationWrapperBase seg_wrapper;
+  SegmentationWrapper seg_wrapper;
   seg_wrapper.prepare_for_inference("seg_config.json");
   seg_wrapper.process_images(image_paths);
   int size = seg_wrapper.get_indexed(true).size();
@@ -72,7 +72,7 @@ TEST(process_images_w_images, inferences_input) {
   std::vector<cv::Mat> images;
   load_images(images, "helsinki_2_apteeki");
 
-  SegmentationWrapperBase seg_wrapper;
+  SegmentationWrapper seg_wrapper;
   seg_wrapper.prepare_for_inference("seg_config.json");
   seg_wrapper.process_images(images);
   int size = seg_wrapper.get_indexed(true).size();
@@ -86,7 +86,7 @@ TEST(process_images, handles_multiple_calls) {
   load_images(images1, "helsinki_2_apteeki");
   load_images(images2, "helsinki_3_usadba");
 
-  SegmentationWrapperBase seg_wrapper;
+  SegmentationWrapper seg_wrapper;
   seg_wrapper.prepare_for_inference("seg_config.json");
   
   seg_wrapper.process_images(images1);

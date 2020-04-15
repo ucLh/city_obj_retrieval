@@ -3,16 +3,16 @@
 #include <iostream>
 #include <set>
 
-std::vector<EmbeddingsBase::distance>
+std::vector<EmbeddingsWrapper::distance>
 MetricsBase::inference_and_matching(std::string img_path) {
-  return EmbeddingsBase::inference_and_matching(img_path);
+  return EmbeddingsWrapper::inference_and_matching(img_path);
 }
 
 float MetricsBase::get_metrics(std::string &testimg_path, int top_N_classes) {
   float metrics;
   std::vector<std::string> test_imgs_paths = fs_img::list_imgs(testimg_path);
   testimg_entry test_img;
-  std::vector<EmbeddingsBase::distance> test_distance;
+  std::vector<EmbeddingsWrapper::distance> test_distance;
   std::string test_class;
 
   std::cout << "Start prepearing for inference" << std::endl;
@@ -52,11 +52,11 @@ float MetricsBase::get_metrics(std::string &testimg_path, int top_N_classes) {
 }
 
 bool MetricsBase::prepare_for_inference(std::string config_path) {
-  return EmbeddingsBase::prepare_for_inference(config_path);
+  return EmbeddingsWrapper::prepare_for_inference(config_path);
 }
 
 std::vector<std::string> MetricsBase::choose_classes(
-    const std::vector<EmbeddingsBase::distance> &matched_images_list,
+    const std::vector<EmbeddingsWrapper::distance> &matched_images_list,
     testimg_entry &test_img, unsigned int top_N_classes) {
   std::set<std::string> top_classes_set;
   std::string test_class;

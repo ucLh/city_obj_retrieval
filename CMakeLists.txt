@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(PROJECT_NAME TF_WRAPPER)
 
 add_subdirectory(tf_wrapper)
-add_subdirectory(application/example)
+add_subdirectory(application/embeddings)
 add_subdirectory(application/metrics)
 add_subdirectory(application/segmentation)
 

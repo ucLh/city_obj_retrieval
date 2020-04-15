@@ -5,7 +5,7 @@
 class MetricsBaseTester : public MetricsBase {
 public:
   std::vector<std::string> choose_classes_wrapper(
-      const std::vector<EmbeddingsBase::distance> &matched_images_list,
+      const std::vector<EmbeddingsWrapper::distance> &matched_images_list,
       testimg_entry &test_img, unsigned int top_N_classes = 2) {
     return MetricsBase::choose_classes(matched_images_list, test_img,
                                        top_N_classes);
@@ -19,7 +19,7 @@ public:
 TEST(_choose_classes, _chooses_topN_unique_classes) {
   MetricsBaseTester wrapper;
 
-  std::vector<EmbeddingsBase::distance> image_list = {
+  std::vector<EmbeddingsWrapper::distance> image_list = {
       {0.1, "series/build1/img/a.jpg"}, {0.2, "series/build2/img/a.jpg"},
       {0.2, "series/build1/img/a.jpg"}, {0.2, "series/build3/img/a.jpg"},
       {0.2, "series/build2/img/a.jpg"}, {0.2, "series/build4/img/a.jpg"},

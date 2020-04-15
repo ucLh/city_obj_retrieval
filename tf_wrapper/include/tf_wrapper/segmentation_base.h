@@ -4,11 +4,11 @@
 #include "interfaces.h"
 #include <set>
 
-class SegmentationWrapperBase {
+class SegmentationWrapper {
 public:
-  SegmentationWrapperBase();
+  SegmentationWrapper();
 
-  ~SegmentationWrapperBase() = default;
+  ~SegmentationWrapper() = default;
 
   /// \brief Method for setting number of GPU to make calculations on.
   /// \param value

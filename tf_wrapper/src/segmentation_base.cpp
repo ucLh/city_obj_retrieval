@@ -5,12 +5,12 @@
 
 #include <utility>
 
-SegmentationWrapperBase::SegmentationWrapperBase() {
+SegmentationWrapper::SegmentationWrapper() {
   inference_handler = std::make_unique<SegmentationInferenceHandler>();
   db_handler = std::make_unique<DataHandling>();
 }
 
-bool SegmentationWrapperBase::load_config(std::string config_path) {
+bool SegmentationWrapper::load_config(std::string config_path) {
   db_handler->set_config_path(std::move(config_path));
   if (!db_handler->load_config()) {
     std::cerr << "Can't load config!" << std::endl;
@@ -26,13 +26,13 @@ bool SegmentationWrapperBase::load_config(std::string config_path) {
   return true;
 }
 
-bool SegmentationWrapperBase::prepare_for_inference(std::string config_path) {
+bool SegmentationWrapper::prepare_for_inference(std::string config_path) {
   load_config(std::move(config_path));
   list_of_imgs = fs_img::list_imgs(db_handler->get_config_imgs_path());
   set_images(list_of_imgs);
 }
 
-bool SegmentationWrapperBase::set_images(
+bool SegmentationWrapper::set_images(
     const std::vector<std::string> &imgs_paths) {
   if (!_is_configured) {
     std::cerr << "You need to configure wrapper first!" << std::endl;
@@ -50,17 +50,17 @@ bool SegmentationWrapperBase::set_images(
   return true;
 }
 
-bool SegmentationWrapperBase::process_images() {
+bool SegmentationWrapper::process_images() {
   return process_images(_imgs);
 }
 
-bool SegmentationWrapperBase::process_images(
+bool SegmentationWrapper::process_images(
     const std::vector<std::string> &imgs_paths) {
   set_images(imgs_paths);
   process_images();
 }
 
-bool SegmentationWrapperBase::process_images(const std::vector<cv::Mat> &images) {
+bool SegmentationWrapper::process_images(const std::vector<cv::Mat> &images) {
   if (!_is_configured) {
     std::cerr << "You need to configure wrapper first!" << std::endl;
     return false;
@@ -77,7 +77,7 @@ bool SegmentationWrapperBase::process_images(const std::vector<cv::Mat> &images)
   return true;
 }
 
-std::vector<cv::Mat> SegmentationWrapperBase::get_indexed(bool resized) {
+std::vector<cv::Mat> SegmentationWrapper::get_indexed(bool resized) {
   std::vector<cv::Mat> indices =
       inference_handler->get_output_segmentation_indices();
   if (resized) {
@@ -90,7 +90,7 @@ std::vector<cv::Mat> SegmentationWrapperBase::get_indexed(bool resized) {
   return indices;
 }
 
-std::vector<cv::Mat> SegmentationWrapperBase::get_colored(bool resized) {
+std::vector<cv::Mat> SegmentationWrapper::get_colored(bool resized) {
   db_handler->load_colors();
   inference_handler->set_segmentation_colors(db_handler->get_colors());
   std::vector<cv::Mat> colored_indices =
@@ -106,9 +106,9 @@ std::vector<cv::Mat> SegmentationWrapperBase::get_colored(bool resized) {
 }
 
 std::vector<cv::Mat>
-SegmentationWrapperBase::get_masked(bool resized,
+SegmentationWrapper::get_masked(bool resized,
                                     const std::set<int> &classes_to_mask) {
-  std::vector<cv::Mat> indices = SegmentationWrapperBase::get_indexed(resized);
+  std::vector<cv::Mat> indices = SegmentationWrapper::get_indexed(resized);
   std::vector<cv::Mat> result_imgs;
   for (unsigned long i = 0; i < indices.size(); ++i) {
     auto cur_img = _imgs[i];
@@ -128,6 +128,6 @@ SegmentationWrapperBase::get_masked(bool resized,
   return result_imgs;
 }
 
-bool SegmentationWrapperBase::set_gpu(int value) {
+bool SegmentationWrapper::set_gpu(int value) {
   return inference_handler->set_gpu_number_preferred(value);
 }
