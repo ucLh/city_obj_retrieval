@@ -1,6 +1,6 @@
-#include "tf_wrapper/embeddings_base.h"
+#include "tf_wrapper/embeddings_wrapper.h"
+#include "tf_wrapper/inference_handlers.h"
 #include "tf_wrapper/tensorflow_embeddings.h"
-#include "tf_wrapper/wrapper_interfaces.h"
 #include <utility>
 
 EmbeddingsWrapper::EmbeddingsWrapper() {
@@ -69,24 +69,23 @@ EmbeddingsWrapper::inference_and_matching(std::string img_path) {
 
 bool EmbeddingsWrapper::_add_updates() {
   std::cout << "Adding updates to database..." << std::endl;
-  cv::Mat img; // TODO rethink this logic..
+  cv::Mat img;
   if (!_is_configured) {
     std::cerr << "You need to configure wrapper first!" << std::endl;
     return false;
   }
-  std::vector<float> out_embedding; // TODO remember about batch
+  std::vector<float> out_embedding;
   DataHandling::data_vec_entry new_data;
-  for (const auto &img_path : list_of_imgs) {
-    img = fs_img::read_img(img_path);
-    inference_handler->inference({img}); // TODO remember about batch
-    new_data.embedding =
-        inference_handler->get_output_embeddings()[0]; // TODO BATCH
+  for (size_t i = 0; i < list_of_imgs.size(); ++i) {
+    std::cout << i << " of " << list_of_imgs.size() << "\r" << std::flush;
+    img = fs_img::read_img(list_of_imgs[i]);
+    inference_handler->inference({img});
+    new_data.embedding = inference_handler->get_output_embeddings()[0];
     inference_handler->clear_data();
-    new_data.filepath = img_path;
+    new_data.filepath = list_of_imgs[i];
     db_handler->add_element_to_data_vec_base(new_data);
     db_handler->add_json_entry(new_data);
-  }
-  return true;
+  }  return true;
 }
 
 bool EmbeddingsWrapper::_check_for_updates() {
@@ -113,8 +112,9 @@ bool sort_by_dist(const EmbeddingsWrapper::distance &a,
   return (a.dist < b.dist);
 }
 
-bool EmbeddingsWrapper::_matching(const std::vector<IDataBase::data_vec_entry> &base,
-                            std::vector<float> &target) {
+bool EmbeddingsWrapper::_matching(
+    const std::vector<IDataBase::data_vec_entry> &base,
+    std::vector<float> &target) {
   distances.clear();
   EmbeddingsWrapper::distance distance;
 

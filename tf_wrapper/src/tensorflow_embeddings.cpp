@@ -9,25 +9,9 @@ bool TensorFlowEmbeddings::set_input_output(
   return true;
 }
 
-bool TensorFlowEmbeddings::normalize_image(cv::Mat &img) {
-  double min, max;
-
-  //    tf_aux::fast_resize_if_possible()
-  //    cv::Scalar data = img.at<cv::Vec3b>(0,0);
-  //    cv::minMaxLoc(img, &min, &max);
-  //    img.convertTo(img, CV_32F, 1, 0); //TODO normalize it in a right way
-  //    img = ((img - cv::Scalar(min, min, min)) / (max - min));
-  //    img = (img * 2) - cv::Scalar(1);
-  return true;
-}
-
 std::string TensorFlowEmbeddings::inference(const std::vector<cv::Mat> &imgs) {
   using namespace tensorflow;
-  for (const cv::Mat &img : imgs) {
-    if (!normalize_image(const_cast<cv::Mat &>(img))) {
-      return "Fail to normalize images";
-    }
-  }
+  //PROFILE_BLOCK("inference time");
 
   if (!tf_aux::convert_mat_to_tensor_v2<float>(imgs, _input_tensor,
                                                tensorflow::DT_FLOAT)) {

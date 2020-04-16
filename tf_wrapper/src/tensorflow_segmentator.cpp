@@ -82,7 +82,7 @@ TensorFlowSegmentator::convert_tensor_to_mat(const tensorflow::Tensor &tensor) {
 
 std::string TensorFlowSegmentator::inference(const std::vector<cv::Mat> &imgs) {
   using namespace tensorflow;
-  PROFILE_BLOCK("inference time");
+  //PROFILE_BLOCK("inference time");
 
   if (!tf_aux::convert_mat_to_tensor_v2<uint8_t>(imgs, _input_tensor,
                                                  tensorflow::DT_UINT8)) {

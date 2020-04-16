@@ -1,7 +1,7 @@
-#include "tf_wrapper/segmentation_base.h"
+#include "tf_wrapper/segmentation_wrapper.h"
 #include "tf_wrapper/common/fs_handling.h"
+#include "tf_wrapper/inference_handlers.h"
 #include "tf_wrapper/tensorflow_segmentator.h"
-#include "tf_wrapper/wrapper_interfaces.h"
 
 #include <utility>
 
@@ -50,9 +50,7 @@ bool SegmentationWrapper::set_images(
   return true;
 }
 
-bool SegmentationWrapper::process_images() {
-  return process_images(_imgs);
-}
+bool SegmentationWrapper::process_images() { return process_images(_imgs); }
 
 bool SegmentationWrapper::process_images(
     const std::vector<std::string> &imgs_paths) {
@@ -77,38 +75,33 @@ bool SegmentationWrapper::process_images(const std::vector<cv::Mat> &images) {
   return true;
 }
 
-std::vector<cv::Mat> SegmentationWrapper::get_indexed(bool resized) {
+std::vector<cv::Mat> SegmentationWrapper::get_indexed() {
   std::vector<cv::Mat> indices =
       inference_handler->get_output_segmentation_indices();
-  if (resized) {
-    for (auto i = 0; i != indices.size(); ++i) {
-      cv::resize(indices[i], indices[i], _img_orig_size[i], 0, 0,
-                 cv::INTER_LINEAR);
-      cv::cvtColor(indices[i], indices[i], cv::COLOR_BGR2RGB);
-    }
+  for (auto i = 0; i != indices.size(); ++i) {
+    cv::resize(indices[i], indices[i], _img_orig_size[i], 0, 0,
+               cv::INTER_LINEAR);
+    cv::cvtColor(indices[i], indices[i], cv::COLOR_BGR2RGB);
   }
   return indices;
 }
 
-std::vector<cv::Mat> SegmentationWrapper::get_colored(bool resized) {
+std::vector<cv::Mat> SegmentationWrapper::get_colored() {
   db_handler->load_colors();
   inference_handler->set_segmentation_colors(db_handler->get_colors());
   std::vector<cv::Mat> colored_indices =
       inference_handler->get_output_segmentation_colored();
-  if (resized) {
-    for (auto i = 0; i != colored_indices.size(); ++i) {
-      cv::resize(colored_indices[i], colored_indices[i], _img_orig_size[i], 0,
-                 0, cv::INTER_LINEAR);
-      cv::cvtColor(colored_indices[i], colored_indices[i], cv::COLOR_BGR2RGB);
-    }
+  for (auto i = 0; i != colored_indices.size(); ++i) {
+    cv::resize(colored_indices[i], colored_indices[i], _img_orig_size[i], 0,
+               0, cv::INTER_LINEAR);
+    cv::cvtColor(colored_indices[i], colored_indices[i], cv::COLOR_BGR2RGB);
   }
   return colored_indices;
 }
 
 std::vector<cv::Mat>
-SegmentationWrapper::get_masked(bool resized,
-                                    const std::set<int> &classes_to_mask) {
-  std::vector<cv::Mat> indices = SegmentationWrapper::get_indexed(resized);
+SegmentationWrapper::get_masked(const std::set<int> &classes_to_mask) {
+  std::vector<cv::Mat> indices = SegmentationWrapper::get_indexed();
   std::vector<cv::Mat> result_imgs;
   for (unsigned long i = 0; i < indices.size(); ++i) {
     auto cur_img = _imgs[i];

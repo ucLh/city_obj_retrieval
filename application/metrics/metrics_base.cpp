@@ -1,4 +1,5 @@
 #include "metrics_base.h"
+#include "metrics_base.h"
 #include "tf_wrapper/common/common_ops.h"
 #include <iostream>
 #include <set>
@@ -13,7 +14,6 @@ float MetricsBase::get_metrics(std::string &testimg_path, int top_N_classes) {
   std::vector<std::string> test_imgs_paths = fs_img::list_imgs(testimg_path);
   testimg_entry test_img;
   std::vector<EmbeddingsWrapper::distance> test_distance;
-  std::string test_class;
 
   std::cout << "Start prepearing for inference" << std::endl;
   prepare_for_inference("config.json");
@@ -35,7 +35,7 @@ float MetricsBase::get_metrics(std::string &testimg_path, int top_N_classes) {
       ++val_correct;
     } else {
       db_handler->add_error_entry(test_img.img_class, test_img.img_path,
-                                  test_class);
+                                  proposed_classes[0]);
     }
     test_img.img_classes_proposed = proposed_classes;
     test_img.distance = test_distance[0].dist;

@@ -1,7 +1,7 @@
 #ifndef TF_WRAPPER_METRICS_BASE_H
 #define TF_WRAPPER_METRICS_BASE_H
 
-#include "tf_wrapper/embeddings_base.h"
+#include "tf_wrapper/embeddings_wrapper.h"
 #include <algorithm>
 
 class MetricsBase : public EmbeddingsWrapper {

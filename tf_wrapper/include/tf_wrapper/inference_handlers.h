@@ -1,5 +1,5 @@
-#ifndef TF_WRAPPER_WRAPPER_INTERFACES_H
-#define TF_WRAPPER_WRAPPER_INTERFACES_H
+#ifndef TF_WRAPPER_INFERENCE_HANDLERS_H
+#define TF_WRAPPER_INFERENCE_HANDLERS_H
 
 #include "interfaces.h"
 #include "tensorflow_embeddings.h"
@@ -86,4 +86,4 @@ private:
   TensorFlowSegmentator segm;
 };
 
-#endif // TF_WRAPPER_WRAPPER_INTERFACES_H
+#endif // TF_WRAPPER_INFERENCE_HANDLERS_H

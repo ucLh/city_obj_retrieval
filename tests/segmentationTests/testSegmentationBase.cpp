@@ -1,5 +1,5 @@
 #include "tf_wrapper/common/fs_handling.h"
-#include "tf_wrapper/segmentation_base.h"
+#include "tf_wrapper/segmentation_wrapper.h"
 #include "gtest/gtest.h"
 
 #include <vector>
@@ -32,15 +32,15 @@ TEST(segmentation_modes, preserves_order) {
   SegmentationWrapper seg_wrapper;
   seg_wrapper.prepare_for_inference("seg_config.json");
   seg_wrapper.process_images();
-  auto indexed_results = seg_wrapper.get_indexed(true);
-  auto colored_results = seg_wrapper.get_colored(true);
-  auto masked_results = seg_wrapper.get_masked(true, {8, 11, 13});
-  colored_results = seg_wrapper.get_colored(true);
-  colored_results = seg_wrapper.get_colored(true);
-  indexed_results = seg_wrapper.get_indexed(true);
-  indexed_results = seg_wrapper.get_indexed(true);
-  masked_results = seg_wrapper.get_masked(true, {8, 11, 13});
-  masked_results = seg_wrapper.get_masked(true, {8, 11, 13});
+  auto indexed_results = seg_wrapper.get_indexed();
+  auto colored_results = seg_wrapper.get_colored();
+  auto masked_results = seg_wrapper.get_masked({8, 11, 13});
+  colored_results = seg_wrapper.get_colored();
+  colored_results = seg_wrapper.get_colored();
+  indexed_results = seg_wrapper.get_indexed();
+  indexed_results = seg_wrapper.get_indexed();
+  masked_results = seg_wrapper.get_masked({8, 11, 13});
+  masked_results = seg_wrapper.get_masked({8, 11, 13});
 
   ASSERT_EQ(indexed_results.size(), indexed_images.size());
   ASSERT_EQ(colored_results.size(), colored_images.size());
@@ -54,7 +54,7 @@ TEST(process_images, inferences_input) {
   SegmentationWrapper seg_wrapper;
   seg_wrapper.prepare_for_inference("seg_config.json");
   seg_wrapper.process_images();
-  int size = seg_wrapper.get_indexed(true).size();
+  int size = seg_wrapper.get_indexed().size();
   ASSERT_EQ(size, 4);
 }
 
@@ -64,7 +64,7 @@ TEST(process_images_w_paths, inferences_input) {
   SegmentationWrapper seg_wrapper;
   seg_wrapper.prepare_for_inference("seg_config.json");
   seg_wrapper.process_images(image_paths);
-  int size = seg_wrapper.get_indexed(true).size();
+  int size = seg_wrapper.get_indexed().size();
   ASSERT_EQ(size, 4);
 }
 
@@ -75,7 +75,7 @@ TEST(process_images_w_images, inferences_input) {
   SegmentationWrapper seg_wrapper;
   seg_wrapper.prepare_for_inference("seg_config.json");
   seg_wrapper.process_images(images);
-  int size = seg_wrapper.get_indexed(true).size();
+  int size = seg_wrapper.get_indexed().size();
   ASSERT_EQ(size, 4);
 }
 
@@ -90,14 +90,14 @@ TEST(process_images, handles_multiple_calls) {
   seg_wrapper.prepare_for_inference("seg_config.json");
   
   seg_wrapper.process_images(images1);
-  auto colored_results1 = seg_wrapper.get_colored(true);
-  colored_results1 = seg_wrapper.get_colored(true);
+  auto colored_results1 = seg_wrapper.get_colored();
+  colored_results1 = seg_wrapper.get_colored();
   ASSERT_EQ(colored_results1.size(), colored_images1.size());
   check_equality(colored_results1, colored_images1);
 
   seg_wrapper.process_images(images2);
-  auto colored_results2 = seg_wrapper.get_colored(true);
-  colored_results2 = seg_wrapper.get_colored(true);
+  auto colored_results2 = seg_wrapper.get_colored();
+  colored_results2 = seg_wrapper.get_colored();
   ASSERT_EQ(colored_results2.size(), colored_images2.size());
   check_equality(colored_results2, colored_images2);
 }

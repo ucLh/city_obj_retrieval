@@ -1,7 +1,7 @@
 #include <utility>
 
 #include "tf_wrapper/common/common_ops.h"
-#include "tf_wrapper/embeddings_base.h"
+#include "tf_wrapper/embeddings_wrapper.h"
 #include "gtest/gtest.h"
 
 class WrapperBaseTester : public EmbeddingsWrapper {

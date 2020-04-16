@@ -33,14 +33,14 @@ public:
   /// \brief
   /// \param resized
   /// \return
-  std::vector<cv::Mat> get_indexed(bool resized); // =true
+  std::vector<cv::Mat> get_indexed(); // =true
 
   /// \brief
   /// \param resized
   /// \return
-  std::vector<cv::Mat> get_colored(bool resized); // =true
+  std::vector<cv::Mat> get_colored(); // =true
 
-  std::vector<cv::Mat> get_masked(bool resized, const std::set<int> &classes_to_mask);
+  std::vector<cv::Mat> get_masked(const std::set<int> &classes_to_mask);
 
   /// \brief Method for getting all visible devices that can handle computations
   /// \return
