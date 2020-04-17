@@ -2,13 +2,6 @@
 
 #include <utility>
 
-bool TensorFlowEmbeddings::set_input_output(
-    std::vector<std::string> in_nodes, std::vector<std::string> out_nodes) {
-  _input_node_names = std::move(in_nodes);
-  _output_node_names = std::move(out_nodes);
-  return true;
-}
-
 std::string TensorFlowEmbeddings::inference(const std::vector<cv::Mat> &imgs) {
   using namespace tensorflow;
   //PROFILE_BLOCK("inference time");
@@ -72,15 +65,4 @@ std::vector<std::vector<float>> TensorFlowEmbeddings::convert_tensor_to_vector(
   }
 
   return vec_embeddings;
-}
-
-bool TensorFlowEmbeddings::set_gpu_number_preferred(int value) {
-  TensorflowWrapperCore::set_gpu_number(value);
-  const int gpu_num_value = TensorflowWrapperCore::get_gpu_number();
-  if (gpu_num_value != value) {
-    std::cerr << "GPU number was not set" << std::endl;
-    return false;
-  }
-
-  return true;
 }

@@ -9,18 +9,18 @@
 #include <string>
 #include <vector>
 
-class TensorflowWrapperCore {
+class TensorFlowWrapperCore {
 public:
   enum INPUT_TYPE { DT_FLOAT, DT_UINT8 };
 
-  TensorflowWrapperCore() = default;
-  virtual ~TensorflowWrapperCore();
+  TensorFlowWrapperCore() = default;
+  virtual ~TensorFlowWrapperCore();
 
-  TensorflowWrapperCore(const TensorflowWrapperCore &) = delete;
-  TensorflowWrapperCore(TensorflowWrapperCore &&that);
+  TensorFlowWrapperCore(const TensorFlowWrapperCore &) = delete;
+  TensorFlowWrapperCore(TensorFlowWrapperCore &&that);
 
   virtual bool load(const std::string &filename,
-                    const std::string &inputNodeName);
+                    const std::string &input_node_name);
 
   virtual inline std::string inference(const std::vector<cv::Mat> &imgs);
 
@@ -53,6 +53,12 @@ public:
   // If -1 may use all visible GPUs. Otherwise that GPU number that was set.
   // Override with default device in the model
   void set_gpu_number(int value);
+
+  // Uses set_gpu_number but checks whether the setting was successful
+  bool set_gpu_number_preferred(int value);
+
+  bool set_input_output(std::vector<std::string> in_nodes,
+                        std::vector<std::string> out_nodes);
 
   double get_gpu_memory_fraction() const;
   void set_gpu_memory_fraction(double gpu_memory_fraction);

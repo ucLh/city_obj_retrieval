@@ -7,15 +7,12 @@
 
 #include <cmath>
 
-class TensorFlowEmbeddings : public TensorflowWrapperCore {
+class TensorFlowEmbeddings : public TensorFlowWrapperCore {
 public:
   TensorFlowEmbeddings() = default;
   ~TensorFlowEmbeddings() override = default;
 
   int batch_size;
-
-  bool set_input_output(std::vector<std::string> in_nodes,
-                        std::vector<std::string> out_nodes);
 
   /// \brief function for inferencing vector of input images
   /// \param imgs is vector of images
@@ -30,8 +27,6 @@ public:
   /// embeddings \param tensor \return Vector of embeddings
   static std::vector<std::vector<float>>
   convert_tensor_to_vector(const tensorflow::Tensor &tensor);
-
-  bool set_gpu_number_preferred(int value);
 
 protected:
   tensorflow::Status _status;

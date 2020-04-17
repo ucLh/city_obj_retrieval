@@ -1,6 +1,6 @@
 #include "tf_wrapper/tensorflow_wrapper_core.h"
 
-TensorflowWrapperCore::TensorflowWrapperCore(TensorflowWrapperCore &&that) {
+TensorFlowWrapperCore::TensorFlowWrapperCore(TensorFlowWrapperCore &&that) {
   _session = that._session;
   _is_loaded = that._is_loaded;
 
@@ -9,14 +9,14 @@ TensorflowWrapperCore::TensorflowWrapperCore(TensorflowWrapperCore &&that) {
   _graph_def = std::move(that._graph_def);
 }
 
-TensorflowWrapperCore::~TensorflowWrapperCore() {
+TensorFlowWrapperCore::~TensorFlowWrapperCore() {
   clear_session();
   auto a = _session->Close();
   common_ops::delete_safe(_session);
 }
 
 // TODO Disable graph optimization. We assume that graph already optimized.
-tensorflow::SessionOptions TensorflowWrapperCore::configure_session() {
+tensorflow::SessionOptions TensorFlowWrapperCore::configure_session() {
   using namespace tensorflow;
 
   SessionOptions opts;
@@ -68,7 +68,7 @@ tensorflow::SessionOptions TensorflowWrapperCore::configure_session() {
 }
 
 // TODO Think about graph configuration
-void TensorflowWrapperCore::configure_graph() {
+void TensorFlowWrapperCore::configure_graph() {
   using namespace tensorflow;
   if (_cpu_only && _agres_optim_cpu_enabled)
     graph::SetDefaultDevice("/job:localhost/replica:0/task:0/device:XLA_CPU:0",
@@ -81,8 +81,8 @@ void TensorflowWrapperCore::configure_graph() {
   }
 }
 
-bool TensorflowWrapperCore::load(const std::string &filename,
-                                 const std::string &inputNodeName) {
+bool TensorFlowWrapperCore::load(const std::string &filename,
+                                 const std::string &input_node_name) {
   using namespace tensorflow;
 
   // Configuration for session
@@ -115,13 +115,13 @@ bool TensorflowWrapperCore::load(const std::string &filename,
   }
   parse_name(filename);
 
-  get_input_node_name_from_graph_if_possible(inputNodeName);
+  get_input_node_name_from_graph_if_possible(input_node_name);
 
   _path = filename;
   return _is_loaded = true;
 }
 
-std::string TensorflowWrapperCore::inference(const std::vector<cv::Mat> &imgs) {
+std::string TensorFlowWrapperCore::inference(const std::vector<cv::Mat> &imgs) {
   using namespace tensorflow;
 
   Tensor input = get_convert_function(INPUT_TYPE::DT_FLOAT)(
@@ -137,12 +137,12 @@ std::string TensorflowWrapperCore::inference(const std::vector<cv::Mat> &imgs) {
   return _status.ToString();
 }
 
-// std::string TensorflowWrapperCore
-void TensorflowWrapperCore::set_name(const std::string &name) { _name = name; }
+// std::string TensorFlowWrapperCore
+void TensorFlowWrapperCore::set_name(const std::string &name) { _name = name; }
 
-void TensorflowWrapperCore::clear_session() { _output_tensors.clear(); }
+void TensorFlowWrapperCore::clear_session() { _output_tensors.clear(); }
 
-void TensorflowWrapperCore::parse_name(const std::string &filename) {
+void TensorFlowWrapperCore::parse_name(const std::string &filename) {
   auto last_slash = filename.rfind("/");
   if (last_slash == std::string::npos) {
     last_slash = 0;
@@ -162,7 +162,7 @@ void TensorflowWrapperCore::parse_name(const std::string &filename) {
   _name = filename.substr(last_slash + 1, (last_dot - last_slash) - 1);
 }
 
-void TensorflowWrapperCore::get_input_node_name_from_graph_if_possible(
+void TensorFlowWrapperCore::get_input_node_name_from_graph_if_possible(
     const std::string &input_node_name) {
   using namespace tensorflow;
 
@@ -184,7 +184,7 @@ void TensorflowWrapperCore::get_input_node_name_from_graph_if_possible(
 }
 
 tensorflow::Tensor
-TensorflowWrapperCore::get_tensor_from_graph(const std::string &tensor_name) {
+TensorFlowWrapperCore::get_tensor_from_graph(const std::string &tensor_name) {
   using namespace tensorflow;
 
   if (tensor_name.empty()) {
@@ -209,26 +209,26 @@ TensorflowWrapperCore::get_tensor_from_graph(const std::string &tensor_name) {
   return tensors[0];
 }
 
-bool TensorflowWrapperCore::get_allow_growth() const { return _allow_growth; }
+bool TensorFlowWrapperCore::get_allow_growth() const { return _allow_growth; }
 
-void TensorflowWrapperCore::set_allow_growth(bool allow_growth) {
+void TensorFlowWrapperCore::set_allow_growth(bool allow_growth) {
   _allow_growth = allow_growth;
 }
 
-std::string TensorflowWrapperCore::get_visible_devices() const {
+std::string TensorFlowWrapperCore::get_visible_devices() const {
   return _visible_devices;
 }
 
-void TensorflowWrapperCore::set_visible_devices(
+void TensorFlowWrapperCore::set_visible_devices(
     const std::string &visible_devices) {
   _visible_devices = visible_devices;
 }
 
-double TensorflowWrapperCore::get_gpu_memory_fraction() const {
+double TensorFlowWrapperCore::get_gpu_memory_fraction() const {
   return _gpu_memory_fraction;
 }
 
-void TensorflowWrapperCore::set_gpu_memory_fraction(
+void TensorFlowWrapperCore::set_gpu_memory_fraction(
     double gpu_memory_fraction) {
   if (gpu_memory_fraction > 1.0) {
     gpu_memory_fraction = 1.0;
@@ -240,41 +240,59 @@ void TensorflowWrapperCore::set_gpu_memory_fraction(
   _gpu_memory_fraction = gpu_memory_fraction;
 }
 
-int TensorflowWrapperCore::get_gpu_number() const { return _gpu_number; }
+int TensorFlowWrapperCore::get_gpu_number() const { return _gpu_number; }
 
-void TensorflowWrapperCore::set_gpu_number(int value) { _gpu_number = value; }
+void TensorFlowWrapperCore::set_gpu_number(int value) { _gpu_number = value; }
 
-bool TensorflowWrapperCore::get_aggressive_optimization_cpu_enabled() const {
+bool TensorFlowWrapperCore::set_gpu_number_preferred(int value) {
+  set_gpu_number(value);
+  const int gpu_num_value = get_gpu_number();
+  if (gpu_num_value != value) {
+    std::cerr << "GPU number was not set" << std::endl;
+    return false;
+  }
+
+  return true;
+}
+
+bool TensorFlowWrapperCore::set_input_output(
+    std::vector<std::string> in_nodes, std::vector<std::string> out_nodes) {
+  _input_node_names = std::move(in_nodes);
+  _output_node_names = std::move(out_nodes);
+  return true;
+}
+
+bool TensorFlowWrapperCore::get_aggressive_optimization_cpu_enabled() const {
   return _agres_optim_cpu_enabled;
 }
 
-void TensorflowWrapperCore::set_aggressive_optimization_cpu_enabled(
+void TensorFlowWrapperCore::set_aggressive_optimization_cpu_enabled(
     bool enabled) {
   _agres_optim_cpu_enabled = enabled;
 }
 
-bool TensorflowWrapperCore::get_cpu_only() const { return _cpu_only; }
+bool TensorFlowWrapperCore::get_cpu_only() const { return _cpu_only; }
 
-void TensorflowWrapperCore::set_cpu_only(bool cpu_only) {
+void TensorFlowWrapperCore::set_cpu_only(bool cpu_only) {
   _cpu_only = cpu_only;
 }
 
-bool TensorflowWrapperCore::get_allow_soft_placement() const {
+bool TensorFlowWrapperCore::get_allow_soft_placement() const {
   return _allow_soft_placement;
 }
 
-void TensorflowWrapperCore::set_allow_soft_placement(
+void TensorFlowWrapperCore::set_allow_soft_placement(
     bool allow_soft_placement) {
   _allow_soft_placement = allow_soft_placement;
 }
 
-bool TensorflowWrapperCore::get_aggressive_optimization_gpu_enabled() const {
+bool TensorFlowWrapperCore::get_aggressive_optimization_gpu_enabled() const {
   return _agres_optim_enabled;
 }
 
-void TensorflowWrapperCore::set_aggressive_optimization_gpu_enabled(
+void TensorFlowWrapperCore::set_aggressive_optimization_gpu_enabled(
     bool enabled) {
   _agres_optim_enabled = enabled;
 }
 
-std::string TensorflowWrapperCore::get_path() const { return _path; }
+std::string TensorFlowWrapperCore::get_path() const { return _path; }

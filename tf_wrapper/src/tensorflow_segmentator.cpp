@@ -110,29 +110,11 @@ bool TensorFlowSegmentator::set_segmentation_colors(
   return true;
 }
 
-bool TensorFlowSegmentator::set_input_output(
-    std::vector<std::string> in_nodes, std::vector<std::string> out_nodes) {
-  _input_node_names = std::move(in_nodes);
-  _output_node_names = std::move(out_nodes);
-  return true;
-}
-
 bool TensorFlowSegmentator::clear_data() {
   if (!_out_tensors_vector.empty())
     _out_tensors_vector.clear();
   if (!_indices.empty())
     _indices.clear();
-
-  return true;
-}
-
-bool TensorFlowSegmentator::set_gpu_number_preferred(int value) {
-  TensorflowWrapperCore::set_gpu_number(value);
-  const int gpu_num_value = TensorflowWrapperCore::get_gpu_number();
-  if (gpu_num_value != value) {
-    std::cerr << "GPU number was not set" << std::endl;
-    return false;
-  }
 
   return true;
 }

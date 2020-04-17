@@ -9,13 +9,10 @@
 #include "tensorflow_wrapper_core.h"
 #include <cmath>
 
-class TensorFlowSegmentator : public TensorflowWrapperCore {
+class TensorFlowSegmentator : public TensorFlowWrapperCore {
 public:
   TensorFlowSegmentator() { _colors = {}; };
   ~TensorFlowSegmentator() override = default;
-
-  virtual bool set_input_output(std::vector<std::string> in_nodes,
-                              std::vector<std::string> out_nodes);
 
   std::string inference(const std::vector<cv::Mat> &imgs) override;
 
@@ -26,10 +23,6 @@ public:
   virtual bool set_segmentation_colors(std::vector<std::array<int, 3>> colors);
 
   virtual bool clear_data();
-
-  virtual bool set_gpu_number_preferred(int value);
-
-  //    bool normalize_image(cv::Mat &img);
 
 protected:
   std::vector<cv::Mat> convert_tensor_to_mat(const tensorflow::Tensor &tensor);
