@@ -15,12 +15,6 @@ public:
   bool set_gpu(int value);
 
   /// \brief
-  /// \param imgs_paths
-  /// \return
-  bool set_images(
-      const std::vector<std::string> &imgs_paths); // opt for future_batch
-
-  /// \brief
   /// \return
   bool process_images();
 
@@ -40,6 +34,9 @@ public:
   /// \return
   std::vector<cv::Mat> get_colored(); // =true
 
+  /// \brief
+  /// \param classes_to_mask
+  /// \return
   std::vector<cv::Mat> get_masked(const std::set<int> &classes_to_mask);
 
   /// \brief Method for getting all visible devices that can handle computations
@@ -51,7 +48,6 @@ protected:
   cv::Size _img_des_size;
   std::vector<cv::Size> _img_orig_size;
   std::vector<cv::Mat> _imgs;
-  std::vector<cv::Mat> _result;
   std::unique_ptr<ISegmentationInterfaceHandler> inference_handler;
   std::unique_ptr<IDataBase> db_handler;
   std::vector<std::string> list_of_imgs;
@@ -61,6 +57,12 @@ protected:
   /// \param config_path is a path to .json file with config to wrapper
   /// \return
   bool load_config(std::string config_path); // ="config.json"
+
+  /// \brief Method for setting image paths to process
+  /// \param imgs_paths
+  /// \return
+  bool set_images(
+      const std::vector<std::string> &imgs_paths); // opt for future_batch
 };
 
 #endif // TF_WRAPPER_SEGMENTATION_WRAPPER_BASE_H

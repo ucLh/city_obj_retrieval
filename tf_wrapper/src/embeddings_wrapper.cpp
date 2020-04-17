@@ -9,7 +9,7 @@ EmbeddingsWrapper::EmbeddingsWrapper() {
   topN = 1;
 }
 
-bool EmbeddingsWrapper::load_config(std::string config_path) {
+bool EmbeddingsWrapper::_load_config(std::string config_path) {
   db_handler->set_config_path(std::move(config_path));
   if (!db_handler->load_config()) {
     std::cerr << "Can't load config!" << std::endl;
@@ -26,7 +26,7 @@ bool EmbeddingsWrapper::load_config(std::string config_path) {
 }
 
 bool EmbeddingsWrapper::prepare_for_inference(std::string config_path) {
-  if (!load_config(std::move(config_path))) {
+  if (!_load_config(std::move(config_path))) {
     return false;
   }
 
@@ -85,7 +85,8 @@ bool EmbeddingsWrapper::_add_updates() {
     new_data.filepath = list_of_imgs[i];
     db_handler->add_element_to_data_vec_base(new_data);
     db_handler->add_json_entry(new_data);
-  }  return true;
+  }
+  return true;
 }
 
 bool EmbeddingsWrapper::_check_for_updates() {

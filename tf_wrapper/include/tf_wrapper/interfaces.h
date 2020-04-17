@@ -13,7 +13,7 @@ public:
                                 std::vector<std::string> out_nodes) = 0;
 
   virtual bool load(const std::string &filename,
-                    const std::string &inputNodeName) = 0;
+                    const std::string &input_node_name) = 0;
 
   virtual std::string inference(const std::vector<cv::Mat> &imgs) = 0;
 

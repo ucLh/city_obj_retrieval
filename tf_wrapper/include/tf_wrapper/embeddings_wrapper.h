@@ -23,13 +23,6 @@ public:
 
   unsigned int topN;
 
-  /// In case you want specific config to be used
-  /// \param path to config
-  /// \return if custom config is used
-  //    bool setConfigPath(std::string path);
-
-  bool load_config(std::string config_path);
-
   /// \brief main method used for reading images in directory and adding the to
   /// th database
   /// \return
@@ -48,6 +41,11 @@ protected:
   std::unique_ptr<IEmbeddingsInferenceHandler> inference_handler;
   std::vector<std::string> list_of_imgs;
   std::vector<EmbeddingsWrapper::distance> distances;
+
+  /// \brief method for loading config
+  /// \param config_path path to config file
+  /// \return
+  bool _load_config(std::string config_path);
 
   bool _matching(const std::vector<IDataBase::data_vec_entry> &base,
                  std::vector<float> &target);

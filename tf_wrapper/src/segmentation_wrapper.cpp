@@ -40,6 +40,7 @@ bool SegmentationWrapper::set_images(
   }
   if (!_imgs.empty()) { /// Delete previously processed images
     _imgs.clear();
+    _img_orig_size.clear();
   }
   cv::Mat img;
   for (const auto &img_path : imgs_paths) {
@@ -92,8 +93,8 @@ std::vector<cv::Mat> SegmentationWrapper::get_colored() {
   std::vector<cv::Mat> colored_indices =
       inference_handler->get_output_segmentation_colored();
   for (auto i = 0; i != colored_indices.size(); ++i) {
-    cv::resize(colored_indices[i], colored_indices[i], _img_orig_size[i], 0,
-               0, cv::INTER_LINEAR);
+    cv::resize(colored_indices[i], colored_indices[i], _img_orig_size[i], 0, 0,
+               cv::INTER_LINEAR);
     cv::cvtColor(colored_indices[i], colored_indices[i], cv::COLOR_BGR2RGB);
   }
   return colored_indices;

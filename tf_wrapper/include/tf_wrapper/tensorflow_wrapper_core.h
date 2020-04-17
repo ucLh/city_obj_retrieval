@@ -3,7 +3,6 @@
 
 #include "tensorflow_base.h"
 #include "tensorflow_auxiliary.h"
-#include "wrapper_legacy.h"
 #include "common/common_ops.h"
 
 #include <string>
@@ -106,22 +105,6 @@ protected:
   /// Tensor
   ///
   tensorflow::Tensor get_tensor_from_graph(const std::string &tensor_name);
-
-  using ConvertFunctionType =
-      decltype(&(wrapper_legacy::convert_mat_to_tensor<tensorflow::DT_FLOAT>));
-
-  ConvertFunctionType get_convert_function(INPUT_TYPE type) {
-    if (type == INPUT_TYPE::DT_FLOAT) {
-      return wrapper_legacy::convert_mat_to_tensor<tensorflow::DT_FLOAT>;
-    }
-    /// Actually we don't need support for int operations because we don't have
-    /// strong hardware limits.
-    //        else if (type == INPUT_TYPE::DT_UINT8) {
-    //            return tf_aux::convertMatToTensor<tensorflow::DT_UINT8>;
-    //        }
-    else
-      throw std::invalid_argument("not implemented");
-  }
 
   bool _is_loaded = false;
   bool _agres_optim_enabled = false;
