@@ -12,7 +12,7 @@ public:
   TensorFlowEmbeddings() = default;
   ~TensorFlowEmbeddings() override = default;
 
-  int batch_size;
+  // int batch_size;
 
   /// \brief function for inferencing vector of input images
   /// \param imgs is vector of images
@@ -23,12 +23,14 @@ public:
   /// \return vector of output embeddings after inference
   std::vector<std::vector<float>> get_output_embeddings();
 
+protected:
   /// \brief function to convert output tensor of embeddings to vector of
-  /// embeddings \param tensor \return Vector of embeddings
+  /// embeddings
+  /// \param tensor
+  /// \return Vector of embeddings
   static std::vector<std::vector<float>>
   convert_tensor_to_vector(const tensorflow::Tensor &tensor);
 
-protected:
   tensorflow::Status _status;
   tensorflow::Tensor _input_tensor;
   std::vector<std::vector<float>> _out_embeddings;

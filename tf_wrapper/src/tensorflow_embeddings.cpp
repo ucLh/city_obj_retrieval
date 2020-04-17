@@ -4,10 +4,10 @@
 
 std::string TensorFlowEmbeddings::inference(const std::vector<cv::Mat> &imgs) {
   using namespace tensorflow;
-  //PROFILE_BLOCK("inference time");
+  // PROFILE_BLOCK("inference time");
 
-  if (!tf_aux::convert_mat_to_tensor_v2<float>(imgs, _input_tensor,
-                                               tensorflow::DT_FLOAT)) {
+  if (!tf_aux::convert_mat_to_tensor_v2<tensorflow::DT_FLOAT>(imgs,
+                                                              _input_tensor)) {
     return "Fail to convert Mat to Tensor";
   }
 

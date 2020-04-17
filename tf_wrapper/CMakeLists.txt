@@ -11,12 +11,11 @@ find_package(TensorFlow CONFIG REQUIRED)
 find_package(OpenCV REQUIRED)
 #find_package(Protobuf REQUIRED)
 
-add_library(TF_WRAPPER_EMBEDDING src/tensorflow_base.cpp
+add_library(TF_WRAPPER_EMBEDDING
         src/tensorflow_wrapper_core.cpp
         src/tensorflow_embeddings.cpp
         src/tensorflow_auxiliary.cpp
         src/embeddings_wrapper.cpp
-        src/wrapper_legacy.cpp
         src/segmentation_wrapper.cpp
         src/tensorflow_segmentator.cpp
         src/common/fs_handling.cpp

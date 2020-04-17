@@ -29,22 +29,24 @@ inline void debug_output(const std::string &header, const std::string &msg) {
 bool fast_resize_if_possible(const cv::Mat &in, cv::Mat *dist,
                              const cv::Size &size);
 
-///
-/// \param imgs
-/// \param tensor
-/// \return
-template <class T>
+/// \brief convertTensorToMat Converts batch of Mats to Tensor format
+/// \param imgs Vector of images (batch) of cv::Mat format, they must be uchar
+/// type
+/// \param tensor Tensor that is going to be used as input for inference
+/// \return true if convertion went ok, flase otherwise
+template <tensorflow::DataType T>
 bool convert_mat_to_tensor_v2(const std::vector<cv::Mat> &imgs,
-                                      tensorflow::Tensor &tensor,
-                                      const tensorflow::DataType &tf_type) {
+                              tensorflow::Tensor &tensor) {
   // We assume that images are already resized and normalized
   int height = imgs[0].size[0];
   int width = imgs[0].size[1];
   int batch_size = imgs.size();
   tensorflow::Tensor input_tensor(
-      tf_type, tensorflow::TensorShape({batch_size, height, width, 3}));
+      T, tensorflow::TensorShape({batch_size, height, width, 3}));
 
-  auto input_tensor_mapped = input_tensor.tensor<T, 4>();
+  using POD_type = typename tensorflow::EnumToDataType<T>::Type;
+
+  auto input_tensor_mapped = input_tensor.tensor<POD_type, 4>();
 
   for (size_t i = 0; i < batch_size; ++i) {
     for (int y = 0; y < height; y++) {
