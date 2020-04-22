@@ -4,7 +4,7 @@
 #include "tf_wrapper/embeddings_wrapper.h"
 #include "gtest/gtest.h"
 
-class WrapperBaseTester : public EmbeddingsWrapper {
+class EmbeddingsWrapperTester : public EmbeddingsWrapper {
 public:
   auto matching(std::vector<DataHandling::data_vec_entry> &base,
                 std::vector<float> &target) {
@@ -29,7 +29,9 @@ public:
 
   auto get_list_of_imgs() { return list_of_imgs; }
 
-  //  auto load_config() { return db_handler->_load_config(); }
+  auto load_config(std::string config_path) {
+    return _load_config(config_path);
+  }
 
   auto set_nodes() {
     inference_handler->set_input_output({db_handler->get_config_input_node()},
@@ -43,7 +45,7 @@ public:
 
 TEST(_matching, _matching_testMatchingCorrectnes_Test) {
 
-  WrapperBaseTester wrapper;
+  EmbeddingsWrapperTester wrapper;
 
   wrapper.topN = 3;
 
@@ -107,7 +109,7 @@ TEST(_check_for_updates, _check_no_changes) {
   test_list_of_imgs.emplace_back(test_entry_closest.filepath);
   test_list_of_imgs.emplace_back(test_entry_middle.filepath);
 
-  WrapperBaseTester wrapper;
+  EmbeddingsWrapperTester wrapper;
   wrapper.set_data_vec_base(test_base);
   wrapper.set_list_of_imgs(test_list_of_imgs);
   wrapper.check_for_updates();
@@ -135,7 +137,7 @@ TEST(_check_for_updates, _check_some_changes) {
   test_list_of_imgs.emplace_back(test_entry_closest.filepath);
   test_list_of_imgs.emplace_back(test_entry_middle.filepath);
 
-  WrapperBaseTester wrapper;
+  EmbeddingsWrapperTester wrapper;
   wrapper.set_data_vec_base(test_base);
   wrapper.set_list_of_imgs(test_list_of_imgs);
   wrapper.check_for_updates();
@@ -166,7 +168,7 @@ TEST(_check_for_updates, _remembers_images_that_are_not_present_anymore) {
   test_list_of_imgs.emplace_back(test_entry_farthest.filepath);
   test_list_of_imgs.emplace_back(test_entry_closest.filepath);
 
-  WrapperBaseTester wrapper;
+  EmbeddingsWrapperTester wrapper;
   wrapper.set_data_vec_base(test_base);
   wrapper.set_list_of_imgs(test_list_of_imgs);
   wrapper.check_for_updates();
@@ -175,7 +177,7 @@ TEST(_check_for_updates, _remembers_images_that_are_not_present_anymore) {
 }
 
 TEST(_add_updates, adds_new_images) {
-  WrapperBaseTester wrapper;
+  EmbeddingsWrapperTester wrapper;
 
   std::vector<DataHandling::data_vec_entry> test_base;
 
@@ -190,7 +192,7 @@ TEST(_add_updates, adds_new_images) {
   test_list_of_imgs.emplace_back("./Lenna.jpg");
 
   wrapper.set_data_vec_base(test_base);
-  wrapper._load_config("./config.json");
+  wrapper.load_config("./config.json");
   wrapper.set_list_of_imgs(test_list_of_imgs);
 
   wrapper.add_updates();
