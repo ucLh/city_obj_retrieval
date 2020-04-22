@@ -42,7 +42,9 @@ float MetricsBase::get_metrics(std::string &queries_path, int top_N_classes) {
     test_img.img_classes_proposed = proposed_classes;
     test_img.distance = matched_images_list[0].dist;
     ++i;
-    std::cout << i << " of " << test_imgs_paths.size() << "\r" << std::flush;
+    std::cout << "Wrapper Info: " << i << " of " << test_imgs_paths.size()
+              << " was processed"
+              << "\r" << std::flush;
   }
 
   metrics = val_correct / test_imgs_paths.size() * 100.f;

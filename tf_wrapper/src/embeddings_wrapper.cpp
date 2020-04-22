@@ -77,7 +77,9 @@ bool EmbeddingsWrapper::_add_updates() {
   std::vector<float> out_embedding;
   DataHandling::data_vec_entry new_data;
   for (size_t i = 0; i < list_of_imgs.size(); ++i) {
-    std::cout << i << " of " << list_of_imgs.size() << "\r" << std::flush;
+    std::cout << "Wrapper Info: " << i << " of " << list_of_imgs.size()
+              << " was processed"
+              << "\r" << std::flush;
     img = fs_img::read_img(list_of_imgs[i]);
     inference_handler->inference({img});
     new_data.embedding = inference_handler->get_output_embeddings()[0];

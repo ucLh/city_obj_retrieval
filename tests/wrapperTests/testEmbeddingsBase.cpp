@@ -29,7 +29,7 @@ public:
 
   auto get_list_of_imgs() { return list_of_imgs; }
 
-  auto load_config(std::string config_path) {
+  auto load_config(const std::string &config_path) {
     return _load_config(config_path);
   }
 

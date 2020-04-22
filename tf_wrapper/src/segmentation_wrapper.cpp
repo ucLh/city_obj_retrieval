@@ -70,8 +70,8 @@ bool SegmentationWrapper::process_images(const std::vector<cv::Mat> &images) {
   for (unsigned long i = 0; i < images.size(); ++i) {
     resized_img = fs_img::resize_img(images[i], _img_des_size);
     inference_handler->inference({resized_img.img_data});
-    std::cout << "Wrapper Info:" << i + 1 << " of " << images.size()
-              << " was processed" << std::endl;
+    std::cout << "Wrapper Info :" << i + 1 << " of " << images.size()
+              << " was processed" << "\r" << std::flush;
   }
   return true;
 }
