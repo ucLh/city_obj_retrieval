@@ -31,9 +31,9 @@ protected:
   static std::vector<std::vector<float>>
   convert_tensor_to_vector(const tensorflow::Tensor &tensor);
 
-  tensorflow::Status _status;
-  tensorflow::Tensor _input_tensor;
-  std::vector<std::vector<float>> _out_embeddings;
+  tensorflow::Status status_;
+  tensorflow::Tensor input_tensor_;
+  std::vector<std::vector<float>> out_embeddings_;
 };
 
 #endif // TF_WRAPPER_EMBEDDING_TENSORFLOW_EMBEDDINGS_H

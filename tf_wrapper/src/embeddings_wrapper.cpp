@@ -4,42 +4,42 @@
 #include <utility>
 
 EmbeddingsWrapper::EmbeddingsWrapper() {
-  db_handler = std::make_unique<DataHandling>();
-  inference_handler = std::make_unique<EmbeddingsInferenceHandler>();
+  db_handler_ = std::make_unique<DataHandling>();
+  inference_handler_ = std::make_unique<EmbeddingsInferenceHandler>();
   topN = 1;
 }
 
-bool EmbeddingsWrapper::_load_config(std::string config_path) {
-  db_handler->set_config_path(std::move(config_path));
-  if (!db_handler->load_config()) {
+bool EmbeddingsWrapper::load_config(std::string config_path) {
+  db_handler_->set_config_path(std::move(config_path));
+  if (!db_handler_->load_config()) {
     std::cerr << "Can't load config!" << std::endl;
     return false;
   }
-  inference_handler->set_input_output({db_handler->get_config_input_node()},
-                                      {db_handler->get_config_output_node()});
-  inference_handler->load(db_handler->get_config_pb_path(),
-                          db_handler->get_config_input_node());
-  _is_configured = true;
+  inference_handler_->set_input_output({db_handler_->get_config_input_node()},
+                                      {db_handler_->get_config_output_node()});
+  inference_handler_->load(db_handler_->get_config_pb_path(),
+                          db_handler_->get_config_input_node());
+  is_configured_ = true;
   std::cout << "Config was loaded" << std::endl;
 
   return true;
 }
 
 bool EmbeddingsWrapper::prepare_for_inference(std::string config_path) {
-  if (!_load_config(std::move(config_path))) {
+  if (!load_config(std::move(config_path))) {
     return false;
   }
 
-  if (!db_handler->load_database()) {
+  if (!db_handler_->load_database()) {
     std::cerr << "Can't load database" << std::endl;
     return false;
   }
   std::cout << "Database was loaded" << std::endl;
 
-  list_of_imgs = fs_img::list_imgs(db_handler->get_config_imgs_path());
-  _check_for_updates();
-  if (!list_of_imgs.empty()) {
-    _add_updates();
+  list_of_imgs_ = fs_img::list_imgs(db_handler_->get_config_imgs_path());
+  check_for_updates();
+  if (!list_of_imgs_.empty()) {
+    add_updates();
   } else
     std::cout << "No new images found" << std::endl;
 
@@ -48,62 +48,62 @@ bool EmbeddingsWrapper::prepare_for_inference(std::string config_path) {
 
 std::vector<EmbeddingsWrapper::distance>
 EmbeddingsWrapper::inference_and_matching(std::string img_path) {
-  if (!_is_configured) {
+  if (!is_configured_) {
     std::cerr << "You need to configure wrapper first!" << std::endl;
     exit(1); // TODO: rethink it
   }
   std::vector<float> embedding;
 
-  topN = db_handler->get_config_top_n();
+  topN = db_handler_->get_config_top_n();
   cv::Mat img = fs_img::read_img(img_path);
 
-  inference_handler->inference({img});
+  inference_handler_->inference({img});
 
-  embedding = inference_handler->get_output_embeddings()[0];
+  embedding = inference_handler_->get_output_embeddings()[0];
 
-  _matching(db_handler->get_data_vec_base(), embedding);
-  inference_handler->clear_data();
+  matching(db_handler_->get_data_vec_base(), embedding);
+  inference_handler_->clear_data();
 
-  return distances;
+  return distances_;
 }
 
-bool EmbeddingsWrapper::_add_updates() {
+bool EmbeddingsWrapper::add_updates() {
   std::cout << "Adding updates to database..." << std::endl;
   cv::Mat img;
-  if (!_is_configured) {
+  if (!is_configured_) {
     std::cerr << "You need to configure wrapper first!" << std::endl;
     return false;
   }
   std::vector<float> out_embedding;
   DataHandling::data_vec_entry new_data;
-  for (size_t i = 0; i < list_of_imgs.size(); ++i) {
-    std::cout << "Wrapper Info: " << i << " of " << list_of_imgs.size()
+  for (size_t i = 0; i < list_of_imgs_.size(); ++i) {
+    std::cout << "Wrapper Info: " << i << " of " << list_of_imgs_.size()
               << " was processed"
               << "\r" << std::flush;
-    img = fs_img::read_img(list_of_imgs[i]);
-    inference_handler->inference({img});
-    new_data.embedding = inference_handler->get_output_embeddings()[0];
-    inference_handler->clear_data();
-    new_data.filepath = list_of_imgs[i];
-    db_handler->add_element_to_data_vec_base(new_data);
-    db_handler->add_json_entry(new_data);
+    img = fs_img::read_img(list_of_imgs_[i]);
+    inference_handler_->inference({img});
+    new_data.embedding = inference_handler_->get_output_embeddings()[0];
+    inference_handler_->clear_data();
+    new_data.filepath = list_of_imgs_[i];
+    db_handler_->add_element_to_data_vec_base(new_data);
+    db_handler_->add_json_entry(new_data);
   }
   return true;
 }
 
-bool EmbeddingsWrapper::_check_for_updates() {
-  for (const auto &entry : db_handler->get_data_vec_base()) {
-    for (auto img_path = list_of_imgs.begin();
-         img_path != list_of_imgs.end();) {
+bool EmbeddingsWrapper::check_for_updates() {
+  for (const auto &entry : db_handler_->get_data_vec_base()) {
+    for (auto img_path = list_of_imgs_.begin();
+         img_path != list_of_imgs_.end();) {
       if (*img_path == entry.filepath) {
-        list_of_imgs.erase(img_path);
+        list_of_imgs_.erase(img_path);
       } else {
         img_path++;
       }
     }
   }
-  if (!list_of_imgs.empty()) {
-    for (const auto &entry : list_of_imgs) {
+  if (!list_of_imgs_.empty()) {
+    for (const auto &entry : list_of_imgs_) {
       std::cout << "Found new data " << entry << std::endl;
     }
   }
@@ -115,10 +115,10 @@ bool sort_by_dist(const EmbeddingsWrapper::distance &a,
   return (a.dist < b.dist);
 }
 
-bool EmbeddingsWrapper::_matching(
+bool EmbeddingsWrapper::matching(
     const std::vector<IDataBase::data_vec_entry> &base,
     std::vector<float> &target) {
-  distances.clear();
+  distances_.clear();
   EmbeddingsWrapper::distance distance;
 
   if (base.empty() or target.empty()) {
@@ -129,13 +129,13 @@ bool EmbeddingsWrapper::_matching(
     distance.dist =
         EmbeddingMatching::calc_distance_euclid(it.embedding, target);
     distance.path = it.filepath;
-    distances.push_back(distance);
+    distances_.push_back(distance);
   }
-  std::sort(distances.begin(), distances.end(), sort_by_dist);
-  if (topN > distances.size()) {
-    topN = distances.size();
+  std::sort(distances_.begin(), distances_.end(), sort_by_dist);
+  if (topN > distances_.size()) {
+    topN = distances_.size();
   }
-  distances.erase(distances.begin() + topN, distances.end());
+  distances_.erase(distances_.begin() + topN, distances_.end());
 
   return true;
 }

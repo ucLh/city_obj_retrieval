@@ -117,9 +117,9 @@ public:
   add_element_to_data_vec_base(DataHandling::data_vec_entry &entry) override;
 
 protected:
-  std::fstream imgs_datafile;
-  std::fstream config_datafile;
-  std::fstream errors_datafile;
+  std::fstream imgs_datafile_;
+  std::fstream config_datafile_;
+  std::fstream errors_datafile_;
 
   bool open_datafile();
   bool open_config();

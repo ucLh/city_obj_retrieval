@@ -44,13 +44,13 @@ public:
   std::string get_devices();
 
 protected:
-  bool _is_configured = false;
-  cv::Size _img_des_size;
-  std::vector<cv::Size> _img_orig_size;
-  std::vector<cv::Mat> _imgs;
-  std::unique_ptr<ISegmentationInterfaceHandler> inference_handler;
-  std::unique_ptr<IDataBase> db_handler;
-  std::vector<std::string> list_of_imgs;
+  bool is_configured_ = false;
+  cv::Size img_des_size_;
+  std::vector<cv::Size> img_orig_size_;
+  std::vector<cv::Mat> imgs_;
+  std::unique_ptr<ISegmentationInterfaceHandler> inference_handler_;
+  std::unique_ptr<IDataBase> db_handler_;
+  std::vector<std::string> list_of_imgs_;
 
   /// \brief Method for configuring wrapper if config need to be loaded from
   /// file

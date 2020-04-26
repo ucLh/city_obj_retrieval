@@ -43,17 +43,17 @@ std::vector<std::string> fs_img::list_imgs(const std::string &dir_path) {
 }
 
 bool DataHandling::open_datafile() {
-  imgs_datafile.open(config.datafile_path, std::ios::in | std::ios::app);
+  imgs_datafile_.open(config.datafile_path, std::ios::in | std::ios::app);
   return true;
 }
 
 bool DataHandling::open_error_datafile() {
-  errors_datafile.open("errors.txt", std::ios::in | std::ios::app); // TODO!!
+  errors_datafile_.open("errors.txt", std::ios::in | std::ios::app); // TODO!!
   return true;
 }
 
 bool DataHandling::open_config() {
-  config_datafile.open(config_path, std::ios::in | std::ios::app);
+  config_datafile_.open(config_path, std::ios::in | std::ios::app);
   return true;
 }
 
@@ -78,8 +78,8 @@ bool DataHandling::load_config() {
 
   open_config();
 
-  if (config_datafile.is_open()) {
-    while (std::getline(config_datafile, line)) {
+  if (config_datafile_.is_open()) {
+    while (std::getline(config_datafile_, line)) {
       json_doc_buffer << line << "\n";
     }
 
@@ -125,8 +125,8 @@ bool DataHandling::load_database() {
     data_vec_base.clear();
   }
 
-  if (imgs_datafile.is_open()) {
-    while (std::getline(imgs_datafile, line)) {
+  if (imgs_datafile_.is_open()) {
+    while (std::getline(imgs_datafile_, line)) {
       data_vec_entry base_entry;
       doc.Parse(line.c_str());
 
@@ -144,7 +144,7 @@ bool DataHandling::load_database() {
     open_datafile();
     load_database();
   }
-  imgs_datafile.close();
+  imgs_datafile_.close();
   return true;
 }
 
@@ -159,7 +159,7 @@ bool DataHandling::add_json_entry(data_vec_entry new_data) {
   Value embedding(kArrayType); // for embedding
   Value name(kStringType);     // for img path
   Document::AllocatorType &allocator = line.GetAllocator();
-  if (imgs_datafile.is_open()) {
+  if (imgs_datafile_.is_open()) {
     for (const auto &value : new_data.embedding) {
       embedding.PushBack(value, allocator);
     }
@@ -170,8 +170,8 @@ bool DataHandling::add_json_entry(data_vec_entry new_data) {
 
     line.Accept(writer);
     //        std::cout << "json entry " << strbuf.GetString() << std::endl;
-    imgs_datafile << strbuf.GetString() << std::endl;
-    imgs_datafile.close();
+    imgs_datafile_ << strbuf.GetString() << std::endl;
+    imgs_datafile_.close();
 
   } else {
     open_datafile();
@@ -193,7 +193,7 @@ bool DataHandling::add_error_entry(const std::string &act_class_in,
   Value act_path(kStringType);       // for img path
   Value expected_class(kStringType); // for img path
   Document::AllocatorType &allocator = line.GetAllocator();
-  if (!errors_datafile.is_open()) {
+  if (!errors_datafile_.is_open()) {
     open_error_datafile();
   }
   // for (const auto &value : new_data.embedding) {
@@ -209,8 +209,8 @@ bool DataHandling::add_error_entry(const std::string &act_class_in,
 
   line.Accept(writer);
   // std::cout << "json entry " << strbuf.GetString() << std::endl;
-  errors_datafile << strbuf.GetString() << std::endl;
-  errors_datafile.close();
+  errors_datafile_ << strbuf.GetString() << std::endl;
+  errors_datafile_.close();
 }
 
 bool DataHandling::set_config_path(std::string path = "config.json") {

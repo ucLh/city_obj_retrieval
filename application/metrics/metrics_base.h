@@ -8,7 +8,7 @@ class MetricsBase : public EmbeddingsWrapper {
 public:
   MetricsBase() {
     //        this->topN = 5;
-    db_handler->set_config_path("config.json");
+    db_handler_->set_config_path("config.json");
   };
 
   ~MetricsBase() = default;

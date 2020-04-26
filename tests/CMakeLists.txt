@@ -19,7 +19,7 @@ file(GLOB_RECURSE TEST_DATA ${CMAKE_CURRENT_LIST_DIR}/test_data/series/*.jpg)
 
 add_subdirectory(commonTests)
 add_subdirectory(tensorflowTests)
-add_subdirectory(wrapperTests)
+add_subdirectory(embeddingsTests)
 add_subdirectory(metricsTests)
 add_subdirectory(segmentationTests)
 

@@ -16,10 +16,10 @@ float MetricsBase::get_metrics(std::string &queries_path, int top_N_classes) {
 
   std::cout << "Start prepearing for inference" << std::endl;
   prepare_for_inference("config.json");
-  std::string series_path = db_handler->get_config_imgs_path();
+  std::string series_path = db_handler_->get_config_imgs_path();
   std::cout << "Preparaing for inference was finished" << std::endl;
   std::cout << "Finding TOP " << top_N_classes << " among "
-            << this->db_handler->get_config_top_n() << std::endl;
+            << this->db_handler_->get_config_top_n() << std::endl;
   float val_correct = 0.f;
 
   int i = 0;
@@ -36,7 +36,7 @@ float MetricsBase::get_metrics(std::string &queries_path, int top_N_classes) {
     if (test_img.is_correct) {
       ++val_correct;
     } else {
-      db_handler->add_error_entry(test_img.img_class, test_img.img_path,
+      db_handler_->add_error_entry(test_img.img_class, test_img.img_path,
                                   proposed_classes[0]);
     }
     test_img.img_classes_proposed = proposed_classes;

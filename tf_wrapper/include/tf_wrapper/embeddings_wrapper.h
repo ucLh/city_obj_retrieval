@@ -36,22 +36,22 @@ public:
   inference_and_matching(std::string img_path);
 
 protected:
-  bool _is_configured = false;
-  std::unique_ptr<IDataBase> db_handler;
-  std::unique_ptr<IEmbeddingsInferenceHandler> inference_handler;
-  std::vector<std::string> list_of_imgs;
-  std::vector<EmbeddingsWrapper::distance> distances;
+  bool is_configured_ = false;
+  std::unique_ptr<IDataBase> db_handler_;
+  std::unique_ptr<IEmbeddingsInferenceHandler> inference_handler_;
+  std::vector<std::string> list_of_imgs_;
+  std::vector<EmbeddingsWrapper::distance> distances_;
 
   /// \brief method for loading config
   /// \param config_path path to config file
   /// \return
-  bool _load_config(std::string config_path);
+  bool load_config(std::string config_path);
 
-  bool _matching(const std::vector<IDataBase::data_vec_entry> &base,
+  bool matching(const std::vector<IDataBase::data_vec_entry> &base,
                  std::vector<float> &target);
 
-  bool _add_updates();
-  bool _check_for_updates();
+  bool add_updates();
+  bool check_for_updates();
 };
 
 #endif // TF_WRAPPER_EMBEDDING_WRAPPER_BASE_H

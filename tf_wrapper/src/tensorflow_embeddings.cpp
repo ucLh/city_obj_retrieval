@@ -7,7 +7,7 @@ std::string TensorFlowEmbeddings::inference(const std::vector<cv::Mat> &imgs) {
   // PROFILE_BLOCK("inference time");
 
   if (!tf_aux::convert_mat_to_tensor_v2<tensorflow::DT_FLOAT>(imgs,
-                                                              _input_tensor)) {
+                                                              input_tensor_)) {
     return "Fail to convert Mat to Tensor";
   }
 
@@ -19,30 +19,30 @@ std::string TensorFlowEmbeddings::inference(const std::vector<cv::Mat> &imgs) {
       {_input_node_name, input}, {"phase_train:0", phase_tensor}};
 #else
   std::vector<std::pair<string, tensorflow::Tensor>> inputs = {
-      {_input_node_names[0], _input_tensor}};
+      {input_node_names_[0], input_tensor_}};
 #endif
 
-  _status = _session->Run(inputs, _output_node_names, {}, &_output_tensors);
+  status_ = session_->Run(inputs, output_node_names_, {}, &output_tensors_);
 
-  //    tf_aux::debug_output("NETWORK_STATUS", _status.ToString());
-  return _status.ToString();
+  //    tf_aux::debug_output("NETWORK_STATUS", status_.ToString());
+  return status_.ToString();
 }
 
 std::vector<std::vector<float>> TensorFlowEmbeddings::get_output_embeddings() {
-  if (_output_tensors.empty() || !_is_loaded) {
+  if (output_tensors_.empty() || !is_loaded_) {
     std::cerr << "Can't get output Embeddings" << std::endl;
     return {};
   }
 
-  if (_out_embeddings.empty()) {
-    const auto &output = _output_tensors[0];
-    _out_embeddings = convert_tensor_to_vector(output);
+  if (out_embeddings_.empty()) {
+    const auto &output = output_tensors_[0];
+    out_embeddings_ = convert_tensor_to_vector(output);
   } else {
-    _out_embeddings.clear();
+    out_embeddings_.clear();
     get_output_embeddings();
   }
 
-  return _out_embeddings;
+  return out_embeddings_;
 }
 
 std::vector<std::vector<float>> TensorFlowEmbeddings::convert_tensor_to_vector(

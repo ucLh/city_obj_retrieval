@@ -11,7 +11,7 @@
 
 class TensorFlowSegmentator : public TensorFlowWrapperCore {
 public:
-  TensorFlowSegmentator() { _colors = {}; };
+  TensorFlowSegmentator() { colors_ = {}; };
   ~TensorFlowSegmentator() override = default;
 
   std::string inference(const std::vector<cv::Mat> &imgs) override;
@@ -27,12 +27,12 @@ public:
 protected:
   std::vector<cv::Mat> convert_tensor_to_mat(const tensorflow::Tensor &tensor);
 
-  std::vector<std::array<int, 3>> _colors;
-  tensorflow::Status _status;
-  tensorflow::Tensor _input_tensor;
+  std::vector<std::array<int, 3>> colors_;
+  tensorflow::Status status_;
+  tensorflow::Tensor input_tensor_;
 
-  std::vector<tensorflow::Tensor> _out_tensors_vector;
-  std::vector<cv::Mat> _indices;
+  std::vector<tensorflow::Tensor> out_tensors_vector_;
+  std::vector<cv::Mat> indices_;
 };
 
 #endif // TF_WRAPPER_SEGMENTATION_TENSORFLOW_SEGMENTATOR_H
