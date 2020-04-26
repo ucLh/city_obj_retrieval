@@ -53,7 +53,7 @@ TEST(add_json_entry, add_json_entry_add_Test) {
 
 TEST(read_img, read_img_read_Test) {
   auto size = cv::Size_<int>(256, 256);
-  cv::Mat test_img = fs_img::read_img("Lenna.jpg", size);
+  cv::Mat test_img = fs_img::read_img("Lenna.jpg");
 
   ASSERT_FALSE(test_img.empty());
   //    Comment these lines out for now. New checkpoints have resize op inside

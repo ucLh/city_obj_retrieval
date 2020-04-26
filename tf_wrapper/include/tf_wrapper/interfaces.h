@@ -5,7 +5,7 @@
 #include <opencv2/core/mat.hpp>
 #include <vector>
 
-class EmbeddingsInterface {
+class IInferenceHandler {
 public:
   virtual bool set_gpu_number_preferred(int value) = 0;
 
@@ -13,20 +13,33 @@ public:
                                 std::vector<std::string> out_nodes) = 0;
 
   virtual bool load(const std::string &filename,
-                    const std::string &inputNodeName) = 0;
+                    const std::string &input_node_name) = 0;
 
   virtual std::string inference(const std::vector<cv::Mat> &imgs) = 0;
 
   virtual std::string get_visible_devices() = 0;
 
+  virtual void clear_data() = 0;
+};
+
+class IEmbeddingsInferenceHandler : public IInferenceHandler {
+public:
   virtual bool is_loaded() = 0;
 
   virtual std::vector<std::vector<float>> get_output_embeddings() = 0;
-
-  virtual void clear_session() = 0;
 };
 
-class DBInterface {
+class ISegmentationInterfaceHandler : public IInferenceHandler {
+public:
+  virtual bool
+  set_segmentation_colors(std::vector<std::array<int, 3>> colors) = 0;
+
+  virtual std::vector<cv::Mat> get_output_segmentation_indices() = 0;
+
+  virtual std::vector<cv::Mat> get_output_segmentation_colored() = 0;
+};
+
+class IDataBase {
 public:
   struct data_vec_entry {
     std::string filepath;
@@ -38,6 +51,8 @@ public:
   virtual bool load_config() = 0;
 
   virtual bool load_database() = 0;
+
+  virtual bool load_colors() = 0;
 
   virtual bool add_json_entry(data_vec_entry new_data) = 0;
 
@@ -61,6 +76,8 @@ public:
 
   virtual int get_config_top_n() = 0;
 
+  virtual std::vector<std::array<int, 3>> get_colors() = 0;
+
   virtual bool set_data_vec_base(const std::vector<data_vec_entry> &base) = 0;
 
   virtual bool set_config_input_size(const cv::Size &size) = 0;
@@ -69,6 +86,8 @@ public:
 
   virtual bool set_config_output_node(const std::string &output_node) = 0;
 
-  virtual bool set_config_pb_path(const std::string &pb_path) = 0;
+  virtual bool set_config_pb_path(const std::string &embed_pb_path) = 0;
+
+  virtual bool set_config_colors_path(const std::string &colors_path) = 0;
 };
 #endif // TF_WRAPPER_INTERFACES_H

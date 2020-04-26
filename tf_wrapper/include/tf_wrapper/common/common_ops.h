@@ -23,13 +23,14 @@ template <typename Type> inline void deletearr_safe(Type *&ptr) {
   ptr = NULL;
 }
 
-void check_end_slash(std::string &path);
+std::string check_end_slash(const std::string &path);
 
 std::vector<std::string> split(const std::string &text,
                                const std::string &delim);
 
 std::string extract_class(const std::string &path_to_img,
-                          std::string &series_path, std::string &queries_path);
+                           const std::string &series_path,
+                           const std::string &queries_path);
 } // namespace common_ops
 
 #endif // TF_WRAPPER_COMMON_OPS_H

@@ -3,6 +3,6 @@
 build
 build_DCKR
 cmake-build-debug
-tests/test_data/*.pb
+*.pb
 img
 data.txt

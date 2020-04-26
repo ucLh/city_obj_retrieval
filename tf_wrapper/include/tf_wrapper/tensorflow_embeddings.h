@@ -7,15 +7,12 @@
 
 #include <cmath>
 
-class TensorFlowEmbeddings : public TensorflowWrapperCore {
+class TensorFlowEmbeddings : public TensorFlowWrapperCore {
 public:
   TensorFlowEmbeddings() = default;
   ~TensorFlowEmbeddings() override = default;
 
-  int batch_size;
-
-  bool set_input_output(std::vector<std::string> in_nodes,
-                        std::vector<std::string> out_nodes);
+  // int batch_size;
 
   /// \brief function for inferencing vector of input images
   /// \param imgs is vector of images
@@ -26,22 +23,17 @@ public:
   /// \return vector of output embeddings after inference
   std::vector<std::vector<float>> get_output_embeddings();
 
-  /// \brief function to normalize input image
-  /// \param img is an input_image
-  /// \return state of processing
-  bool normalize_image(cv::Mat &img);
-
+protected:
   /// \brief function to convert output tensor of embeddings to vector of
-  /// embeddings \param tensor \return Vector of embeddings
+  /// embeddings
+  /// \param tensor
+  /// \return Vector of embeddings
   static std::vector<std::vector<float>>
   convert_tensor_to_vector(const tensorflow::Tensor &tensor);
 
-  bool set_gpu_number_preferred(int value);
-
-protected:
-  tensorflow::Status _status;
-  tensorflow::Tensor _input_tensor;
-  std::vector<std::vector<float>> _out_embeddings;
+  tensorflow::Status status_;
+  tensorflow::Tensor input_tensor_;
+  std::vector<std::vector<float>> out_embeddings_;
 };
 
 #endif // TF_WRAPPER_EMBEDDING_TENSORFLOW_EMBEDDINGS_H

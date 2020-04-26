@@ -3,32 +3,31 @@
 
 #include "tensorflow_base.h"
 #include "tensorflow_auxiliary.h"
-#include "wrapper_legacy.h"
 #include "common/common_ops.h"
 
 #include <string>
 #include <vector>
 
-class TensorflowWrapperCore {
+class TensorFlowWrapperCore {
 public:
   enum INPUT_TYPE { DT_FLOAT, DT_UINT8 };
 
-  TensorflowWrapperCore() = default;
-  virtual ~TensorflowWrapperCore();
+  TensorFlowWrapperCore() = default;
+  virtual ~TensorFlowWrapperCore();
 
-  TensorflowWrapperCore(const TensorflowWrapperCore &) = delete;
-  TensorflowWrapperCore(TensorflowWrapperCore &&that);
+  TensorFlowWrapperCore(const TensorFlowWrapperCore &) = delete;
+  TensorFlowWrapperCore(TensorFlowWrapperCore &&that);
 
   virtual bool load(const std::string &filename,
-                    const std::string &inputNodeName);
+                    const std::string &input_node_name);
 
   virtual inline std::string inference(const std::vector<cv::Mat> &imgs);
 
-  virtual inline bool is_loaded() const { return _is_loaded; }
+  virtual inline bool is_loaded() const { return is_loaded_; }
 
   virtual void clear_session();
 
-  virtual inline std::string get_name() const { return _name; }
+  virtual inline std::string get_name() const { return name_; }
   virtual void set_name(const std::string &name);
 
   std::string get_path() const;
@@ -54,6 +53,12 @@ public:
   // Override with default device in the model
   void set_gpu_number(int value);
 
+  // Uses set_gpu_number but checks whether the setting was successful
+  bool set_gpu_number_preferred(int value);
+
+  bool set_input_output(std::vector<std::string> in_nodes,
+                        std::vector<std::string> out_nodes);
+
   double get_gpu_memory_fraction() const;
   void set_gpu_memory_fraction(double gpu_memory_fraction);
 
@@ -65,79 +70,61 @@ public:
 
 protected:
   //    virtual void clear_model() = 0;
-  //    virtual void clear_session() = 0;
+  //    virtual void clear_data() = 0;
 
   void get_input_node_name_from_graph_if_possible(
       const std::string &input_node_name);
 
-  tensorflow::Status _status;
+  tensorflow::Status status_;
 
   /// values for covert image before processing
-  short _input_height = 256;
-  short _input_width = 256;
-  short _input_depth = 3;
+  short input_height_ = 256;
+  short input_width_ = 256;
+  short input_depth_ = 3;
 
-  std::vector<float> _mean = {0, 0, 0};
-  bool _convert_to_float = false;
+  std::vector<float> mean_ = {0, 0, 0};
+  bool convert_to_float_ = false;
   ///_______________________________________
 
   /// values for inference
-  std::vector<std::string> _input_node_names;
-  std::vector<std::string> _output_node_names;
+  std::vector<std::string> input_node_names_;
+  std::vector<std::string> output_node_names_;
 
   ///_______________________________________
 
-  std::vector<tensorflow::Tensor> _output_tensors;
+  std::vector<tensorflow::Tensor> output_tensors_;
 
   void parse_name(const std::string &filename);
   tensorflow::SessionOptions configure_session();
   void configure_graph();
 
-  ///
   /// \brief getTensorFromGraph Method for extracting tensors from graph. For
-  /// usage, model must be loaded and Session must be active. \param tensor_name
-  /// Name in the Graph \return Empty Tensor if failed, otherwise extructed
-  /// Tensor
-  ///
+  /// usage, model must be loaded and Session must be active.
+  /// \param tensor_name Name in the Graph
+  /// \return Empty Tensor if failed, otherwise extructed Tensor
   tensorflow::Tensor get_tensor_from_graph(const std::string &tensor_name);
 
-  using ConvertFunctionType =
-      decltype(&(wrapper_legacy::convert_mat_to_tensor<tensorflow::DT_FLOAT>));
-
-  ConvertFunctionType get_convert_function(INPUT_TYPE type) {
-    if (type == INPUT_TYPE::DT_FLOAT) {
-      return wrapper_legacy::convert_mat_to_tensor<tensorflow::DT_FLOAT>;
-    }
-    /// Actually we don't need support for int operations because we don't have
-    /// strong hardware limits.
-    //        else if (type == INPUT_TYPE::DT_UINT8) {
-    //            return tf_aux::convertMatToTensor<tensorflow::DT_UINT8>;
-    //        }
-    else
-      throw std::invalid_argument("not implemented");
-  }
-
-  bool _is_loaded = false;
-  bool _agres_optim_enabled = false;
+  bool is_loaded_ = false;
+  bool agres_optim_enabled_ = false;
 
   /// Mostly that nedeed for XLA, because it's not possible to enable XLA for
   /// CPU on session level But is possible manually. Works only if cpu only
   /// mode.
-  bool _agres_optim_cpu_enabled = false;
+  bool agres_optim_cpu_enabled_ = false;
 
-  bool _allow_soft_placement = true;
-  bool _cpu_only = false;
+  bool allow_soft_placement_ = true;
+  bool cpu_only_ = false;
 
-  std::string _name = "UnknownModel";
-  std::string _path = "";
-  std::string _visible_devices = "";
+  std::string name_ = "UnknownModel";
+  std::string path_ = "";
+  std::string visible_devices_ = "";
 
-  tensorflow::GraphDef _graph_def;
-  tensorflow::Session *_session = nullptr;
+  tensorflow::GraphDef graph_def_;
+  tensorflow::Session *session_ = nullptr;
 
-  int _gpu_number = -1;
-  double _gpu_memory_fraction = 0.;
-  bool _allow_growth = false;
+  int gpu_number_ = -1;
+  double gpu_memory_fraction_ = 0.;
+  bool allow_growth_ = true;
 };
 
 #endif // TF_WRAPPER_EMBEDDING_TENSORFLOW_WRAPPER_CORE_H

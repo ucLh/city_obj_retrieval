@@ -1,6 +1,6 @@
-set(MODULE_NAME wrapperTests)
+set(MODULE_NAME embeddingsTests)
 set(SRC_FILES
-        ${CMAKE_CURRENT_LIST_DIR}/testWrapperBase.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/testEmbeddingsBase.cpp
         #        ${CMAKE_CURRENT_LIST_DIR}/testTensorflowCorrectness.cpp
         )
 

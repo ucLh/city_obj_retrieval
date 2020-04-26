@@ -1,49 +1,42 @@
 #include <utility>
 
 #include "tf_wrapper/common/common_ops.h"
-#include "tf_wrapper/wrapper_base.h"
+#include "tf_wrapper/embeddings_wrapper.h"
 #include "gtest/gtest.h"
 
-class WrapperBaseTester : public WrapperBase {
+class EmbeddingsWrapperTester : public EmbeddingsWrapper {
 public:
   auto matching(std::vector<DataHandling::data_vec_entry> &base,
                 std::vector<float> &target) {
-    return _matching(base, target);
+    return EmbeddingsWrapper::matching(base, target);
   }
 
-  auto add_updates() { return _add_updates(); }
+  auto add_updates() { return EmbeddingsWrapper::add_updates(); }
 
-  auto check_for_updates() { return _check_for_updates(); }
+  auto check_for_updates() { return EmbeddingsWrapper::check_for_updates(); }
 
-  auto get_distances() { return distances; }
+  auto get_distances() { return distances_; }
 
   auto set_data_vec_base(std::vector<DataHandling::data_vec_entry> &vec_base) {
-    db_handler->set_data_vec_base(vec_base);
+    db_handler_->set_data_vec_base(vec_base);
   }
 
-  auto get_data_vec_base() { return db_handler->get_data_vec_base(); }
+  auto get_data_vec_base() { return db_handler_->get_data_vec_base(); }
 
   auto set_list_of_imgs(std::vector<std::string> &list_of_imgs) {
-    this->list_of_imgs = list_of_imgs;
+    this->list_of_imgs_ = list_of_imgs;
   }
 
-  auto get_list_of_imgs() { return list_of_imgs; }
+  auto get_list_of_imgs() { return list_of_imgs_; }
 
-  auto load_config() { return db_handler->load_config(); }
-
-  auto set_nodes() {
-    _input_nodes = {db_handler->get_config_input_node()};
-    _output_nodes = {db_handler->get_config_output_node()};
-  }
-
-  auto set_config_path(const std::string &path) {
-    db_handler->set_config_path(path);
+  auto load_config(const std::string &config_path) {
+    return EmbeddingsWrapper::load_config(config_path);
   }
 };
 
 TEST(_matching, _matching_testMatchingCorrectnes_Test) {
 
-  WrapperBaseTester wrapper;
+  EmbeddingsWrapperTester wrapper;
 
   wrapper.topN = 3;
 
@@ -107,7 +100,7 @@ TEST(_check_for_updates, _check_no_changes) {
   test_list_of_imgs.emplace_back(test_entry_closest.filepath);
   test_list_of_imgs.emplace_back(test_entry_middle.filepath);
 
-  WrapperBaseTester wrapper;
+  EmbeddingsWrapperTester wrapper;
   wrapper.set_data_vec_base(test_base);
   wrapper.set_list_of_imgs(test_list_of_imgs);
   wrapper.check_for_updates();
@@ -135,7 +128,7 @@ TEST(_check_for_updates, _check_some_changes) {
   test_list_of_imgs.emplace_back(test_entry_closest.filepath);
   test_list_of_imgs.emplace_back(test_entry_middle.filepath);
 
-  WrapperBaseTester wrapper;
+  EmbeddingsWrapperTester wrapper;
   wrapper.set_data_vec_base(test_base);
   wrapper.set_list_of_imgs(test_list_of_imgs);
   wrapper.check_for_updates();
@@ -166,7 +159,7 @@ TEST(_check_for_updates, _remembers_images_that_are_not_present_anymore) {
   test_list_of_imgs.emplace_back(test_entry_farthest.filepath);
   test_list_of_imgs.emplace_back(test_entry_closest.filepath);
 
-  WrapperBaseTester wrapper;
+  EmbeddingsWrapperTester wrapper;
   wrapper.set_data_vec_base(test_base);
   wrapper.set_list_of_imgs(test_list_of_imgs);
   wrapper.check_for_updates();
@@ -175,7 +168,7 @@ TEST(_check_for_updates, _remembers_images_that_are_not_present_anymore) {
 }
 
 TEST(_add_updates, adds_new_images) {
-  WrapperBaseTester wrapper;
+  EmbeddingsWrapperTester wrapper;
 
   std::vector<DataHandling::data_vec_entry> test_base;
 
@@ -190,10 +183,8 @@ TEST(_add_updates, adds_new_images) {
   test_list_of_imgs.emplace_back("./Lenna.jpg");
 
   wrapper.set_data_vec_base(test_base);
+  wrapper.load_config("./config.json");
   wrapper.set_list_of_imgs(test_list_of_imgs);
-  wrapper.set_config_path("./config.json");
-  wrapper.load_config();
-  wrapper.set_nodes();
 
   wrapper.add_updates();
 
