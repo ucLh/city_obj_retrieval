@@ -39,7 +39,7 @@ To configure library you should use .json files. The library provides inferencin
 retrieval and segmentation nets. You should use separate .json files for each type of network.
 
 ##### Common part:
-* Parameter `"input size"` sets the size to which input image is resized to. It depends on the net that you are going
+* Parameter `"input_size"` sets the size to which input image is resized to. It depends on the net that you are going
 to use.
 * Parameter `"images_path"` is a path to images which are forming your database, in which network is going to find a 
 a match to a query image.
