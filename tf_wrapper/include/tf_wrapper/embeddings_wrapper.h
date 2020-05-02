@@ -32,8 +32,13 @@ public:
   /// in database
   /// \param img_path passed image
   /// \return vector of distance between passed image and db images
-  virtual std::vector<EmbeddingsWrapper::distance>
-  inference_and_matching(std::string img_path);
+  std::vector<EmbeddingsWrapper::distance>
+  inference_and_matching(const std::string &img_path);
+
+  /// \brief Same function as the above one. Needs a cv::Mat img instead of
+  /// a path to file
+  /// \param cv::Mat img
+  std::vector<EmbeddingsWrapper::distance> inference_and_matching(cv::Mat img);
 
 protected:
   bool is_configured_ = false;
@@ -48,7 +53,7 @@ protected:
   bool load_config(std::string config_path);
 
   bool matching(const std::vector<IDataBase::data_vec_entry> &base,
-                 std::vector<float> &target);
+                std::vector<float> &target);
 
   bool add_updates();
   bool check_for_updates();
