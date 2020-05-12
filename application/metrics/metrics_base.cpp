@@ -4,13 +4,9 @@
 #include <iostream>
 #include <set>
 
-//std::vector<EmbeddingsWrapper::distance>
-//MetricsBase::inference_and_matching(std::string img_path) {
-//  return EmbeddingsWrapper::inference_and_matching(img_path);
-//}
-
-float MetricsBase::get_metrics(std::string &queries_path, int top_N_classes,
-                               bool use_segmentation) {
+std::vector<float> MetricsBase::get_metrics(std::string &queries_path,
+                                            int top_N_classes,
+                                            bool use_segmentation) {
   queries_path_ = queries_path;
 
   std::vector<std::string> test_imgs_paths = fs_img::list_imgs(queries_path);
@@ -33,9 +29,8 @@ float MetricsBase::get_metrics(std::string &queries_path, int top_N_classes,
   std::cout << "Finding TOP " << top_N_classes << " among "
             << db_handler_->get_config_top_n() << std::endl;
 
-  float val_correct = 0.f, metrics;
+  float val_correct = 0.f, accuracy, ap_sum = 0.f;
   int i = 0;
-  double ap_sum = 0.f;
   for (const auto &test_img_path : test_imgs_paths) {
     test_img.img_path = test_img_path;
     test_img.img_class =
@@ -68,18 +63,21 @@ float MetricsBase::get_metrics(std::string &queries_path, int top_N_classes,
   }
   std::cout << std::endl;
 
-  metrics = val_correct / test_imgs_paths.size() * 100.f;
-  double mean_ap = ap_sum / test_imgs_paths.size();
-  std::cout << "Accuracy is : " << metrics << "%" << std::endl;
+  accuracy = val_correct / test_imgs_paths.size() * 100.f;
+  float mean_ap = ap_sum / test_imgs_paths.size();
+  std::cout << "Accuracy is : " << accuracy << "%" << std::endl;
   std::cout << "Mean average precision is : " << mean_ap << std::endl;
   std::cout << "Got " << val_correct << " out of " << test_imgs_paths.size()
             << " right" << std::endl;
 
+  std::vector<float> metrics = {accuracy, mean_ap};
   return metrics;
 }
 
-bool MetricsBase::prepare_for_inference(std::string config_path) {
-  return EmbeddingsWrapper::prepare_for_inference(config_path);
+std::vector<EmbeddingsWrapper::distance>
+MetricsBase::match(const std::string &path_to_file) {
+  prepare_for_inference("embed_config.json");
+  return inference_and_matching(path_to_file);
 }
 
 std::vector<std::string> MetricsBase::choose_classes(
@@ -107,10 +105,10 @@ std::vector<std::string> MetricsBase::choose_classes(
   return top_classes_vec;
 }
 
-double MetricsBase::calculate_average_precision(
+float MetricsBase::calculate_average_precision(
     const std::vector<EmbeddingsWrapper::distance> &matched_images_list,
     const std::string &target_class_name) {
-  double sum = 0;
+  float sum = 0.f;
   int appearance_count = 0;
   auto series_path = db_handler_->get_config_imgs_path();
   for (int i = 0; i < matched_images_list.size(); ++i) {
@@ -118,11 +116,11 @@ double MetricsBase::calculate_average_precision(
                                                 series_path, queries_path_);
     if (target_class_name == class_name) {
       ++appearance_count;
-      sum += (double)appearance_count / (i + 1);
+      sum += (float)appearance_count / (float)(i + 1);
     }
   }
   if (appearance_count == 0) {
     return 0;
   }
-  return sum / appearance_count;
+  return sum / (float)appearance_count;
 }

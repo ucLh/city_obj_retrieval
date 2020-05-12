@@ -89,5 +89,7 @@ public:
   virtual bool set_config_pb_path(const std::string &embed_pb_path) = 0;
 
   virtual bool set_config_colors_path(const std::string &colors_path) = 0;
+
+  virtual bool set_config_imgs_path(const std::string &imgs_path) = 0;
 };
 #endif // TF_WRAPPER_INTERFACES_H

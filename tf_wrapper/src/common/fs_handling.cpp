@@ -282,6 +282,11 @@ bool DataHandling::set_config_colors_path(const std::string &colors_path) {
   return true;
 }
 
+bool DataHandling::set_config_imgs_path(const std::string &imgs_path) {
+  config.imgs_path = imgs_path;
+  return true;
+}
+
 std::vector<DataHandling::data_vec_entry> DataHandling::get_data_vec_base() {
   return data_vec_base;
 }

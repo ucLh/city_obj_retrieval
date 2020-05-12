@@ -18,7 +18,7 @@ bool SegmentationWrapper::load_config(std::string config_path) {
   }
   img_des_size_ = db_handler_->get_config_input_size();
   inference_handler_->set_input_output({db_handler_->get_config_input_node()},
-                                      {db_handler_->get_config_output_node()});
+                                       {db_handler_->get_config_output_node()});
   inference_handler_->load(db_handler_->get_config_pb_path(),
                            db_handler_->get_config_input_node());
   is_configured_ = true;
@@ -65,13 +65,14 @@ bool SegmentationWrapper::process_images(const std::vector<cv::Mat> &images) {
     return false;
   }
   fs_img::image_data_struct resized_img;
-  inference_handler_->clear_data(); /// Need to clear data that may be saved from
-                                   /// previous launch
+  inference_handler_->clear_data(); /// Need to clear data that may be saved
+                                    /// from previous launch
   for (unsigned long i = 0; i < images.size(); ++i) {
     resized_img = fs_img::resize_img(images[i], img_des_size_);
     inference_handler_->inference({resized_img.img_data});
     std::cout << "Wrapper Info: " << i + 1 << " of " << images.size()
-              << " was processed" << "\r" << std::flush;
+              << " was processed"
+              << "\r" << std::flush;
   }
   std::cout << std::endl;
   return true;

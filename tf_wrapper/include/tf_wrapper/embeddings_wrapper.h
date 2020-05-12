@@ -26,7 +26,7 @@ public:
   /// \brief main method used for reading images in directory and adding the to
   /// th database
   /// \return
-  virtual bool prepare_for_inference(std::string config_path);
+  bool prepare_for_inference(std::string config_path);
 
   /// \brief main method used for matching passed image with images that already
   /// in database

@@ -111,6 +111,8 @@ public:
 
   bool set_config_colors_path(const std::string &colors_path) override;
 
+  bool set_config_imgs_path(const std::string &imgs_path) override;
+
   std::vector<DataHandling::data_vec_entry> get_data_vec_base() override;
 
   void

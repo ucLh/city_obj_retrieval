@@ -3,9 +3,9 @@
     256,
     256
   ],
-  "datafile_path": "/home/luch/Programming/C++/city_obj_retrieval/data.txt",
-  "imgs_path": "/home/luch/Programming/C++/city_obj_retrieval/tests/test_data/series",
-  "pb_path": "/home/luch/Programming/C++/city_obj_retrieval/tests/test_data/val80_optimized.pb",
+  "datafile_path": "/home/luch/Programming/C++/city_obj_retrieval/data_seg.txt",
+  "imgs_path": "/home/luch/Programming/Python/obj_retrieval_cnn/datasets/segmentation/series_seg_trees",
+  "pb_path": "/home/luch/Programming/C++/city_obj_retrieval/tests/test_data/val84_rotated.pb",
   "input_node": "image_batch_p:0",
   "output_node": "embeddings:0",
   "top_n": 50

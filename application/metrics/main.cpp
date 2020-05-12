@@ -13,5 +13,6 @@ int main(int argc, char *argv[]) {
   std::cout << "Start initalizing tf_wrapper" << std::endl;
   MetricsBase tf_wrapper;
   std::cout << "Wrapper was initialized" << std::endl;
-  tf_wrapper.get_metrics((std::string &)in_path, top_n_classes, use_segmentation);
+  tf_wrapper.get_metrics((std::string &)in_path, top_n_classes,
+                         use_segmentation);
 }
