@@ -100,6 +100,7 @@ The `TF_WRAPPER_METRICS` is a simple console application to calculate accuracy o
 * `--test_path` - path to a directory with query images that you'd like to match with the images in `"images_path"` directory
 * `--top_n_classes` - number of plausible classes for a query. If the query image is among `-top_n_classes` unique classes
 the match will be considered correct in metrics calculation.
+* `--use_segmentation` - whether to mask images before matching
 
 #### Segmentation
 The `TF_SEGMENTATION_EXAMPLE` file is an example of `"segmentation_base.h"` usage. To run it you should pass 

@@ -47,7 +47,13 @@ bool EmbeddingsWrapper::prepare_for_inference(std::string config_path) {
 }
 
 std::vector<EmbeddingsWrapper::distance>
-EmbeddingsWrapper::inference_and_matching(std::string img_path) {
+EmbeddingsWrapper::inference_and_matching(const std::string &img_path) {
+  cv::Mat img = fs_img::read_img(img_path);
+  return inference_and_matching(img);
+}
+
+std::vector<EmbeddingsWrapper::distance>
+EmbeddingsWrapper::inference_and_matching(cv::Mat img) {
   if (!is_configured_) {
     std::cerr << "You need to configure wrapper first!" << std::endl;
     exit(1); // TODO: rethink it
@@ -55,9 +61,8 @@ EmbeddingsWrapper::inference_and_matching(std::string img_path) {
   std::vector<float> embedding;
 
   topN = db_handler_->get_config_top_n();
-  cv::Mat img = fs_img::read_img(img_path);
 
-  inference_handler_->inference({img});
+  inference_handler_->inference({std::move(img)});
 
   embedding = inference_handler_->get_output_embeddings()[0];
 

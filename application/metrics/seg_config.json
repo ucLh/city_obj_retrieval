@@ -1,0 +1,11 @@
+{
+  "input_size": [
+    1024,
+    1024
+  ],
+  "imgs_path": "/home/luch/Programming/C++/city_obj_retrieval/tests/test_data/series/helsinki_3_usadba",
+  "pb_path": "/home/luch/Programming/C++/city_obj_retrieval/Xception-Deeplab.pb",
+  "colors_path": "/home/luch/Programming/C++/city_obj_retrieval/classes.csv",
+  "input_node": "ImageTensor:0",
+  "output_node": "SemanticPredictions:0"
+}
