@@ -10,6 +10,8 @@ and performing image retrieval with them.
 * Opencv (may be remove it later)
 * Abseil _(for tests)_
 
+Alternatively, you can skip installation of the requirements and use 
+[this](https://hub.docker.com/r/uclh/tensorflow-cpp-opencv) docker container (with a wrapper-v2 tag). 
 #### Instructions
 
 * Easy way to install tensorflow is by using [this](https://github.com/leggedrobotics/tensorflow-cpp) repository. 
