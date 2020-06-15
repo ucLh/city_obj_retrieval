@@ -14,6 +14,9 @@ public:
   TensorFlowSegmentator() { colors_ = {}; };
   ~TensorFlowSegmentator() override = default;
 
+  /// \brief function for inferencing vector of input images
+  /// \param imgs is vector of images
+  /// \return status message
   std::string inference(const std::vector<cv::Mat> &imgs) override;
 
   virtual std::vector<cv::Mat> get_output_segmentation_indices();

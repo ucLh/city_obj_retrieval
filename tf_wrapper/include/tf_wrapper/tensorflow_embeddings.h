@@ -19,7 +19,7 @@ public:
   /// \return status message
   std::string inference(const std::vector<cv::Mat> &imgs) override;
 
-  /// \brief
+  /// \brief provides vector of output embeddings after inference
   /// \return vector of output embeddings after inference
   std::vector<std::vector<float>> get_output_embeddings();
 
@@ -27,7 +27,7 @@ protected:
   /// \brief function to convert output tensor of embeddings to vector of
   /// embeddings
   /// \param tensor
-  /// \return Vector of embeddings
+  /// \return vector of embeddings
   static std::vector<std::vector<float>>
   convert_tensor_to_vector(const tensorflow::Tensor &tensor);
 

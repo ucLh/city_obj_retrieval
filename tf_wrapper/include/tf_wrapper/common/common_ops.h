@@ -4,7 +4,8 @@
 #include "fs_handling.h"
 
 namespace common_ops {
-/// \brief
+/// \brief Function for extracting class (building name) from a filepath.
+/// Requires 'series' or 'queries' string to be in a filepath
 /// \param filepath
 /// \return
 std::string extract_class(const std::string &filepath);
@@ -28,6 +29,11 @@ std::string check_end_slash(const std::string &path);
 std::vector<std::string> split(const std::string &text,
                                const std::string &delim);
 
+/// \brief Alternative version of class extracting function. Series path and
+/// quires path now have to be set
+/// \param path_to_img
+/// \param series_path
+/// \param queries_path
 std::string extract_class(const std::string &path_to_img,
                            const std::string &series_path,
                            const std::string &queries_path);

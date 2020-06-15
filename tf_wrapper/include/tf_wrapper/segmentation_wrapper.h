@@ -14,29 +14,27 @@ public:
   /// \param value
   bool set_gpu(int value);
 
-  /// \brief
-  /// \return
+  /// \brief Main method for processing images with a segmentation neural
+  /// network
   bool process_images();
 
   bool process_images(const std::vector<std::string> &imgs_paths);
 
   bool process_images(const std::vector<cv::Mat> &images);
 
+  /// \brief Main method used for reading images in directory and adding them to
+  /// the database
   bool prepare_for_inference(std::string config_path = "config.json");
 
-  /// \brief
-  /// \param resized
-  /// \return
+  /// \brief Provides indexes of an image after it has been processed
   std::vector<cv::Mat> get_indexed(); // =true
 
-  /// \brief
-  /// \param resized
-  /// \return
+  /// \brief Provides color mask of an image after it has been processed
   std::vector<cv::Mat> get_colored(); // =true
 
-  /// \brief
-  /// \param classes_to_mask
-  /// \return
+  /// \brief Provides masked image after it has been processed
+  /// \param classes_to_mask a set of integers corresponding to classes in
+  /// classes.csv (the classes file that is specified in the config)
   std::vector<cv::Mat> get_masked(const std::set<int> &classes_to_mask);
 
   /// \brief Method for getting all visible devices that can handle computations

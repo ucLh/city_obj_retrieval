@@ -57,19 +57,18 @@ public:
     std::string colors_path;
   };
 
-  // struct with all config data
+  /// \brief struct with all config data
   config_data config;
 
-  // important variable. It contains information of image paths and
-  // corresponding embeddings.
+  /// \brief important variable. It contains information of image paths and
+  /// corresponding embeddings.
   std::vector<data_vec_entry> data_vec_base;
 
-  // vector with the colors for segmentation
+  /// \brief vector with the colors for segmentation
   std::vector<std::array<int, 3>> colors;
 
   std::string config_path = "config.json";
 
-  // TODO MOVE IT OUT
   bool load_database() override;
   bool load_config() override;
   bool add_json_entry(data_vec_entry new_data) override;
@@ -83,7 +82,12 @@ public:
   /// \return if custom config is used
   bool set_config_path(std::string path) override;
 
+  /// \brief loads colors from classes.csv (or other *.csv file specified in
+  /// config under "colors_path")
   bool load_colors() override;
+
+  /// \return loaded colors
+  std::vector<std::array<int, 3>> get_colors() override;
 
   cv::Size get_config_input_size() override;
 
@@ -96,10 +100,6 @@ public:
   std::string get_config_imgs_path() override;
 
   int get_config_top_n() override;
-
-  std::vector<std::array<int, 3>> get_colors() override;
-
-  bool set_data_vec_base(const std::vector<data_vec_entry> &base) override;
 
   bool set_config_input_size(const cv::Size &size) override;
 
@@ -114,6 +114,8 @@ public:
   bool set_config_imgs_path(const std::string &imgs_path) override;
 
   std::vector<DataHandling::data_vec_entry> get_data_vec_base() override;
+
+  bool set_data_vec_base(const std::vector<data_vec_entry> &base) override;
 
   void
   add_element_to_data_vec_base(DataHandling::data_vec_entry &entry) override;

@@ -23,12 +23,11 @@ public:
 
   unsigned int topN;
 
-  /// \brief main method used for reading images in directory and adding the to
-  /// th database
-  /// \return
+  /// \brief Main method used for reading images in directory and adding the to
+  /// the database
   bool prepare_for_inference(std::string config_path);
 
-  /// \brief main method used for matching passed image with images that already
+  /// \brief Main method used for matching passed image with images that already
   /// in database
   /// \param img_path passed image
   /// \return vector of distance between passed image and db images
@@ -47,11 +46,12 @@ protected:
   std::vector<std::string> list_of_imgs_;
   std::vector<EmbeddingsWrapper::distance> distances_;
 
-  /// \brief method for loading config
+  /// \brief Method for loading config
   /// \param config_path path to config file
-  /// \return
   bool load_config(std::string config_path);
 
+  /// \brief Method for embeddings matching that is called from
+  /// inference_and_matching method
   bool matching(const std::vector<IDataBase::data_vec_entry> &base,
                 std::vector<float> &target);
 
