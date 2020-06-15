@@ -127,4 +127,6 @@ dataset
 
 ```
 
+#### Checkpoints
+You can obtain embedding network checkpoints with scripts provided in `python_scripts` folder.
 
